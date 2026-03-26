@@ -16,21 +16,19 @@ function updateDashboard() {
     document.getElementById('totalInvoices').innerText = HoaDonGiaoDich.length;
 }
 
-// 3. Hàm điều hướng (Giữ nguyên từ code cũ của bạn)
+// 3. Hàm điều hướng
 function goTo(page) {
-    console.log("Chuyển hướng tới: " + page);
-    // window.location.href = page;
+    window.location.href = page;
 }
 
 // 4. XỬ LÝ TRUY VẤN DỮ LIỆU (Mục 4.3 trong báo cáo)
 function handleQueryChange() {
     const queryId = document.getElementById('querySelector').value;
-    const thead = document.getElementById('thead');
-    const tbody = document.getElementById('tbody');
     const resultTitle = document.getElementById('resultTitle');
+    const tbody = document.getElementById('tbody');
 
     if (!queryId) {
-        tbody.innerHTML = '<tr><td colspan="5">Vui lòng chọn một truy vấn...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">Vui lòng chọn một truy vấn...</td></tr>';
         return;
     }
 
@@ -71,19 +69,57 @@ function handleQueryChange() {
             ]);
             break;
 
-        case '4.3.6': // Đếm số lượng theo loại (GROUP BY)
-            resultTitle.innerText = "Kết quả: Thống kê số lượng tồn theo loại";
-            headers = ["Nhóm Hàng Hóa", "Tổng Số Lượng Tồn"];
-            const groups = {};
-            HangHoa.forEach(h => {
-                let nhom = h.Ten.includes("Nhẫn") ? "Nhẫn" : (h.Ten.includes("miếng") ? "Vàng Miếng" : "Khác");
-                groups[nhom] = (groups[nhom] || 0) + h.SoLuong;
+        // --- CÁC MỤC MỚI BỔ SUNG ---
+
+        case '4.3.13': // 4 hàng hóa mua nhiều nhất
+            resultTitle.innerText = "Kết quả: 4 sản phẩm bán chạy nhất";
+            headers = ["Mã HH", "Tên Sản Phẩm", "Số lượng đã bán"];
+            const salesCount = {};
+            ChiTietHoaDon.forEach(ct => {
+                salesCount[ct.MaHH] = (salesCount[ct.MaHH] || 0) + ct.SoLuong;
             });
-            data = Object.keys(groups).map(k => [k, groups[k] + " món"]);
+            data = Object.keys(salesCount)
+                .map(ma => {
+                    const h = HangHoa.find(item => item.MaHH === ma);
+                    return [ma, h ? h.Ten : "N/A", salesCount[ma]];
+                })
+                .sort((a, b) => b[2] - a[2]).slice(0, 4);
             break;
 
+        case '4.3.14': // Hóa đơn trị giá cao nhất
+            resultTitle.innerText = "Kết quả: Giao dịch có trị giá cao nhất";
+            headers = ["Mã GD", "Khách Hàng", "Ngày GD", "Trị giá"];
+            const topInvoice = [...HoaDonGiaoDich].sort((a, b) => b.ThanhTienSauGiam - a.ThanhTienSauGiam)[0];
+            if (topInvoice) {
+                data = [[topInvoice.MaGD, topInvoice.TenKH, topInvoice.ThoiGian, topInvoice.ThanhTienSauGiam.toLocaleString() + " đ"]];
+            }
+            break;
+
+        case '4.3.15': // Giao dịch của KH04
+            resultTitle.innerText = "Kết quả: Các hóa đơn của khách hàng KH04";
+            headers = ["Mã GD", "Ngày GD", "Mã HH", "Thành tiền"];
+            data = HoaDonGiaoDich.filter(hd => hd.MaKH === 'KH04')
+                .map(hd => [hd.MaGD, hd.ThoiGian, hd.MaHH, hd.ThanhTienSauGiam.toLocaleString() + " đ"]);
+            break;
+
+        case '4.3.16': // Khách hàng mua nhiều nhất
+            resultTitle.innerText = "Kết quả: Khách hàng mua nhiều sản phẩm nhất";
+            headers = ["Mã KH", "Tên Khách Hàng", "Tổng SP đã mua"];
+            const custMap = {};
+            HoaDonGiaoDich.forEach(hd => {
+                custMap[hd.MaKH] = (custMap[hd.MaKH] || 0) + hd.SoLuong;
+            });
+            const topCustId = Object.keys(custMap).sort((a, b) => custMap[b] - custMap[a])[0];
+            const kh = KhachHang.find(k => k.MaKH === topCustId);
+            if (kh) {
+                data = [[topCustId, kh.HoTen, custMap[topCustId]]];
+            }
+            break;
+
+        // --- CÁC MỤC THỐNG KÊ CŨ ---
+
         case '4.3.17': // Hàng hóa chưa từng mua
-            resultTitle.innerText = "Kết quả: Hàng hóa chưa phát sinh giao dịch (Tồn kho)";
+            resultTitle.innerText = "Kết quả: Hàng hóa chưa phát sinh giao dịch";
             headers = ["Mã HH", "Tên Sản Phẩm", "Trạng thái"];
             const soldIds = ChiTietHoaDon.map(ct => ct.MaHH);
             data = HangHoa.filter(h => !soldIds.includes(h.MaHH))
@@ -95,7 +131,7 @@ function handleQueryChange() {
             headers = ["Mã NV", "Tên Nhân Viên", "Doanh Thu"];
             const sales = {};
             HoaDonGiaoDich.forEach(hd => {
-                sales[hd.MaNV] = (sales[hd.MaNV] || 0) + (hd.TongTien || 0);
+                sales[hd.MaNV] = (sales[hd.MaNV] || 0) + (hd.ThanhTienSauGiam || 0);
             });
             data = Object.keys(sales).map(ma => {
                 const nv = NhanVien.find(n => n.MaNV === ma);
@@ -104,7 +140,6 @@ function handleQueryChange() {
             break;
     }
 
-    // Hiển thị ra bảng
     renderTable(headers, data);
 }
 
@@ -125,7 +160,7 @@ function renderTable(headers, rows) {
     `).join('');
 }
 
-// 6. Hàm tìm kiếm nhanh trên thanh Topbar
+// 6. Hàm tìm kiếm nhanh
 function instantSearch() {
     const input = document.getElementById('mainSearch').value.toLowerCase();
     const resultTitle = document.getElementById('resultTitle');
