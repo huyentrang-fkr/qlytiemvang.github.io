@@ -1,59 +1,40 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Gold Shop Dashboard</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <title>Gold Shop Dashboard - Quản Lý Tiệm Vàng</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* CSS bổ sung nhanh để bảng hiển thị đẹp */
+        .query-section { margin-top: 30px; background: rgba(255,255,255,0.1); padding: 25px; border-radius: 20px; backdrop-filter: blur(10px); }
+        .query-select { width: 100%; padding: 12px; border-radius: 10px; background: #164245; color: white; border: 1px solid #26a69a; margin-bottom: 20px; cursor: pointer; }
+        .result-table { width: 100%; border-collapse: collapse; margin-top: 15px; color: white; }
+        .result-table th { border-bottom: 2px solid #26a69a; color: #26a69a; text-align: left; padding: 10px; }
+        .result-table td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .astro { width: 150px; } /* Căn chỉnh lại ảnh astronaut */
+    </style>
 </head>
 <body>
 
 <div class="container">
 
-  <!-- TOP BAR -->
-  <header class="topbar">
-    <input type="text" placeholder="Search hàng hóa, hóa đơn...">
-    <div class="user">Admin Trang</div>
-  </header>
+    <header class="topbar">
+        <div class="search-box">
+            <input type="text" id="mainSearch" placeholder="Tìm tên hàng, mã khách..." onkeyup="instantSearch()">
+        </div>
+        <div class="user">👤 Admin Huyền Trang</div>
+    </header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-text">
-      <h1>TIỆM VÀNG</h1>
-      <p>Hệ thống quản lý vàng & trang sức</p>
-      <button onclick="goTo('products.html')">Xem hàng hóa</button>
-    </div>
+    <section class="hero">
+        <div class="hero-text">
+            <h1>TIỆM VÀNG <span>2026</span></h1>
+            <p>Hệ thống quản lý dữ liệu chuyên nghiệp (Nhóm 2)</p>
+            <button onclick="window.scrollTo(0, 500)">Bắt đầu truy vấn ↓</button>
+        </div>
+        <img src="assets/astronaut.png" class="astro" alt="Astronaut">
+    </section>
 
-    <img src="assets/astronaut.png" class="astro">
-  </section>
-
-  <!-- MENU -->
-  <div class="menu">
-    <button onclick="goTo('products.html')">Hàng hóa</button>
-    <button onclick="goTo('customers.html')">Khách hàng</button>
-    <button onclick="goTo('invoices.html')">Hóa đơn</button>
-  </div>
-
-  <!-- CARD -->
-  <section class="cards">
-    <div class="card">
-      <h3>Tổng hàng hóa</h3>
-      <p id="totalProducts"></p>
-    </div>
-
-    <div class="card">
-      <h3>Tổng khách hàng</h3>
-      <p id="totalCustomers"></p>
-    </div>
-
-    <div class="card">
-      <h3>Tổng hóa đơn</h3>
-      <p id="totalInvoices"></p>
-    </div>
-  </section>
-
-</div>
-
-<script src="js/api.js"></script>
-<script src="js/main.js"></script>
-</body>
-</html>
+    <div class="menu">
+        <button onclick="goTo('products.html')">📦 Hàng hóa</button>
+        <button onclick="goTo('customers.html')">👥 Khách hàng</button>
+        <button onclick="goTo('invoices.html')">📄 Hóa đơn</button>
