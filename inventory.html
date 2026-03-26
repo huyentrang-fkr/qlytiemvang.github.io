@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Kho Hàng - Tiệm Vàng 2026</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .inventory-header { background: linear-gradient(135deg, #2c3e50, #000000); color: white; padding: 40px 0; }
+        .stats-box { border-left: 4px solid #ffc107; background: #fff; padding: 15px; border-radius: 8px; shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .status-low { color: #dc3545; fw-bold; } /* Cảnh báo hàng sắp hết */
+    </style>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">💎 TRANG CHỦ</a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="inventory.html">Kho Hàng</a>
+                <a class="nav-link" href="sales.html">Hóa Đơn</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="inventory-header text-center shadow">
+        <div class="container">
+            <h1 class="display-5 fw-bold">QUẢN LÝ TỒN KHO</h1>
+            <p class="lead">Theo dõi số lượng, nguyên liệu và giá trị tài sản thực tế</p>
+        </div>
+    </header>
+
+    <div class="container mt-n4">
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="stats-box shadow-sm">
+                    <small class="text-muted">Tổng vốn tồn kho</small>
+                    <h5 id="totalInventoryValue" class="m-0 text-primary">Đang tính...</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-box shadow-sm" style="border-left-color: #28a745;">
+                    <small class="text-muted">Sản phẩm bán chạy</small>
+                    <h5 class="m-0">Vàng miếng SJC</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-box shadow-sm" style="border-left-color: #dc3545;">
+                    <small class="text-muted">Mặt hàng sắp hết</small>
+                    <h5 id="lowStockCount" class="m-0 text-danger">0 loại</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-box shadow-sm" style="border-left-color: #17a2b8;">
+                    <small class="text-muted">Cập nhật lần cuối</small>
+                    <h5 class="m-0 small">26/03/2026</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h5 class="m-0 fw-bold"><i class="bi bi-box-seam"></i> Danh Mục Lưu Kho</h5>
+                    </div>
+                    <div class="col-auto">
+                        <select id="materialFilter" class="form-select form-select-sm" onchange="filterInventory()">
+                            <option value="all">Tất cả nguyên liệu</option>
+                            <option value="V9999">Vàng 24K (9999)</option>
+                            <option value="V750">Vàng 18K (750)</option>
+                            <option value="B925">Bạc 925</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mã</th>
+                            <th>Tên Sản Phẩm</th>
+                            <th>Nguyên Liệu</th>
+                            <th class="text-center">Số Lượng</th>
+                            <th class="text-end">Đơn Giá Nhập</th>
+                            <th class="text-end">Tổng Giá Trị</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        function renderInventory(data) {
+            const body = document.getElementById('inventoryBody');
+            let totalValue = 0;
+            let lowStock = 0;
+            let html = '';
+
+            data.forEach(item => {
+                const giaBan = BangGiaThiTruong[item.MaNL].Ban;
+                const value = giaBan * item.TrongLuong * item.SoLuong;
+                totalValue += value;
+                
+                if(item.SoLuong < 5) lowStock++;
+
+                html += `
+                    <tr>
+                        <td><small class="text-muted">${item.MaHH}</small></td>
+                        <td class="fw-bold">${item.Ten}</td>
+                        <td><span class="badge bg-light text-dark border">${BangGiaThiTruong[item.MaNL].Ten}</span></td>
+                        <td class="text-center ${item.SoLuong < 5 ? 'status-low' : ''}">
+                            ${item.SoLuong}
+                        </td>
+                        <td class="text-end">${(giaBan * item.TrongLuong).toLocaleString()} đ</td>
+                        <td class="text-end fw-bold text-success">${value.toLocaleString()} đ</td>
+                    </tr>
+                `;
+            });
+
+            body.innerHTML = html;
+            document.getElementById('totalInventoryValue').innerText = totalValue.toLocaleString() + ' đ';
+            document.getElementById('lowStockCount').innerText = lowStock + ' loại';
+        }
+
+        function filterInventory() {
+            const mCode = document.getElementById('materialFilter').value;
+            const filtered = mCode === 'all' ? HangHoa : HangHoa.filter(h => h.MaNL === mCode);
+            renderInventory(filtered);
+        }
+
+        // Khởi tạo trang
+        window.onload = () => renderInventory(HangHoa);
+    </script>
+</body>
+</html>
