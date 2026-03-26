@@ -1,24 +1,95 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-4">
-            <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action active">4.3. TRUY VẤN DỮ LIỆU</a>
-                <button onclick="executeQuery('4.3.1')" class="list-group-item">4.3.1. Giá > 15 triệu</button>
-                <button onclick="executeQuery('4.3.3')" class="list-group-item">4.3.3. Nhẫn & Dây chuyền</button>
-                <button onclick="executeQuery('4.3.4')" class="list-group-item">4.3.4. Top 5 giá thấp nhất</button>
-                <button onclick="executeQuery('4.3.6')" class="list-group-item">4.3.6. Đếm theo loại</button>
-                <button onclick="executeQuery('4.3.13')" class="list-group-item">4.3.13. Bán chạy nhất</button>
-                <button onclick="executeQuery('4.3.17')" class="list-group-item">4.3.17. Hàng chưa bán</button>
-                <button onclick="executeQuery('4.3.18')" class="list-group-item">4.3.18. Doanh thu NV</button>
+            <div class="list-group shadow">
+                <a href="#" class="list-group-item list-group-item-action active bg-warning border-warning text-dark fw-bold">
+                    <i class="bi bi-search me-2"></i>4.3. TRUY VẤN DỮ LIỆU
+                </a>
+                <button onclick="executeQuery('4.3.1', this)" class="list-group-item list-group-item-action">Giá > 15 triệu</button>
+                <button onclick="executeQuery('4.3.3', this)" class="list-group-item list-group-item-action">Nhẫn & Dây chuyền</button>
+                <button onclick="executeQuery('4.3.4', this)" class="list-group-item list-group-item-action">Top 5 giá thấp nhất</button>
+                <button onclick="executeQuery('4.3.6', this)" class="list-group-item list-group-item-action">Thống kê theo loại</button>
+                <button onclick="executeQuery('4.3.13', this)" class="list-group-item list-group-item-action">Sản phẩm bán chạy nhất</button>
+                <button onclick="executeQuery('4.3.17', this)" class="list-group-item list-group-item-action">Hàng tồn kho chưa bán</button>
+                <button onclick="executeQuery('4.3.18', this)" class="list-group-item list-group-item-action">Doanh thu theo nhân viên</button>
             </div>
         </div>
 
         <div class="col-md-8">
-            <h4 id="queryTitle">Chọn truy vấn để xem kết quả</h4>
-            <table class="table table-dark table-hover mt-3">
-                <thead id="queryHeader"></thead>
-                <tbody id="queryBody"></tbody>
-            </table>
+            <div class="p-3 border border-secondary rounded bg-dark">
+                <h4 id="queryTitle" class="text-warning mb-3">Chọn truy vấn để xem kết quả</h4>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mt-3 border-secondary">
+                        <thead id="queryHeader" class="table-secondary text-dark"></thead>
+                        <tbody id="queryBody">
+                            <tr><td class="text-muted italic">Kết quả sẽ hiển thị tại đây...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+function executeQuery(queryId, btn) {
+    // 1. Hiệu ứng Active cho nút
+    document.querySelectorAll('.list-group-item').forEach(el => el.classList.remove('active', 'bg-secondary'));
+    btn.classList.add('active', 'bg-secondary');
+
+    const title = document.getElementById('queryTitle');
+    const header = document.getElementById('queryHeader');
+    const body = document.getElementById('queryBody');
+
+    // 2. Kiểm tra dữ liệu nguồn
+    if (typeof HangHoa === 'undefined') {
+        body.innerHTML = '<tr><td class="text-danger">Lỗi: Không tìm thấy dữ liệu từ data.js</td></tr>';
+        return;
+    }
+
+    let data = [];
+    let headers = [];
+    let titleText = "";
+
+    // 3. Xử lý logic truy vấn
+    switch (queryId) {
+        case '4.3.1':
+            titleText = "Hàng hóa có giá trị trên 15.000.000 VNĐ";
+            headers = ["Mã HH", "Tên Sản Phẩm", "Giá Niêm Yết"];
+            data = HangHoa.filter(h => (h.TrongLuong * BangGiaThiTruong[h.MaNL].Ban) > 15000000)
+                .map(h => [h.MaHH, h.Ten, (h.TrongLuong * BangGiaThiTruong[h.MaNL].Ban).toLocaleString() + " đ"]);
+            break;
+
+        case '4.3.3':
+            titleText = "Danh mục Nhẫn và Dây chuyền";
+            headers = ["Mã HH", "Tên Sản Phẩm", "Loại Vàng", "Tồn kho"];
+            data = HangHoa.filter(h => h.Ten.includes("Nhẫn") || h.Ten.includes("Dây chuyền"))
+                .map(h => [h.MaHH, h.Ten, BangGiaThiTruong[h.MaNL].Ten, h.SoLuong]);
+            break;
+
+        case '4.3.4':
+            titleText = "Top 5 sản phẩm có giá thấp nhất";
+            headers = ["Mã HH", "Tên Sản Phẩm", "Giá"];
+            data = [...HangHoa].sort((a, b) => (a.TrongLuong * BangGiaThiTruong[a.MaNL].Ban) - (b.TrongLuong * BangGiaThiTruong[b.MaNL].Ban))
+                .slice(0, 5)
+                .map(h => [h.MaHH, h.Ten, (h.TrongLuong * BangGiaThiTruong[h.MaNL].Ban).toLocaleString() + " đ"]);
+            break;
+
+        case '4.3.6':
+            titleText = "Thống kê số lượng tồn kho theo loại";
+            headers = ["Loại nguyên liệu", "Số lượng mặt hàng", "Tổng số lượng tồn"];
+            const stats = {};
+            HangHoa.forEach(h => {
+                if (!stats[h.MaNL]) stats[h.MaNL] = { count: 0, totalQty: 0 };
+                stats[h.MaNL].count++;
+                stats[h.MaNL].totalQty += h.SoLuong;
+            });
+            data = Object.keys(stats).map(key => [BangGiaThiTruong[key].Ten, stats[key].count + " mẫu", stats[key].totalQty + " món"]);
+            break;
+
+        case '4.3.13':
+            titleText = "Top 4 sản phẩm bán chạy nhất";
+            headers = ["Mã HH", "Tên Sản Phẩm", "Số lượng đã bán"];
+            const salesCount = {};
+            ChiTietHoaDon.forEach(ct => salesCount[ct.MaHH] = (salesCount[ct.MaHH] || 0) + ct.SoLuong);
+            data = Object.keys(salesCount).sort((a, b) => salesCount[b] - salesCount[a]).slice
