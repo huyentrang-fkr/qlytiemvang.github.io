@@ -23,7 +23,7 @@ function handleQueryChange() {
     const tbody = document.getElementById('tbody');
 
     if (!queryId) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #888;">Vui lòng chọn một truy vấn...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color: #888; padding: 40px;">Kết quả truy vấn sẽ hiển thị tại đây...</td></tr>';
         return;
     }
 
@@ -41,7 +41,7 @@ function handleQueryChange() {
                 h.MaHH, 
                 h.Ten, 
                 BangGiaThiTruong[h.MaNL].Ten,
-                `<span style="color: #ffc107;">${(h.TrongLuong * BangGiaThiTruong[h.MaNL].Ban).toLocaleString()} đ</span>`
+                `<span style="color: #ffc107; font-weight: bold;">${(h.TrongLuong * BangGiaThiTruong[h.MaNL].Ban).toLocaleString()} đ</span>`
             ]);
             break;
 
@@ -64,7 +64,7 @@ function handleQueryChange() {
             ]);
             break;
 
-        case '4.3.6': // MỚI: Thống kê tồn kho theo loại
+        case '4.3.6': // Thống kê tồn kho theo loại
             resultTitle.innerText = "Kết quả: Thống kê số lượng tồn kho theo nhóm sản phẩm";
             headers = ["Nhóm hàng", "Số lượng tồn"];
             const nhom = { "Vàng miếng": 0, "Trang sức": 0, "Phong thủy": 0, "Bạc": 0 };
@@ -86,8 +86,82 @@ function handleQueryChange() {
             });
             data = Object.keys(counts).map(ma => {
                 const h = HangHoa.find(x => x.MaHH === ma);
-                return [ma, h ? h.Ten : ma, counts[ma]];
+                return [ma, h ? h.Ten : ma, counts[ma] + " sp"];
             }).sort((a, b) => b[2] - a[2]).slice(0, 4);
             break;
 
-        case '4.3.14': //
+        case '4.3.14': // Hóa đơn trị giá cao nhất
+            resultTitle.innerText = "Kết quả: Giao dịch có trị giá cao nhất";
+            headers = ["Mã GD", "Khách Hàng", "Ngày GD", "Tổng Tiền"];
+            const topInvoice = [...HoaDonGiaoDich].sort((a, b) => b.ThanhTienSauGiam - a.ThanhTienSauGiam)[0];
+            if (topInvoice) {
+                data = [[topInvoice.MaGD, topInvoice.TenKH, topInvoice.ThoiGian, `<span style="color: #ffc107; font-weight:bold;">${topInvoice.ThanhTienSauGiam.toLocaleString()} đ</span>`]];
+            }
+            break;
+
+        case '4.3.15': // Giao dịch của KH10 hoặc KH04 tùy file của bạn
+            resultTitle.innerText = "Kết quả: Lịch sử giao dịch của khách hàng VIP";
+            headers = ["Mã GD", "Ngày GD", "Sản phẩm", "Thành tiền"];
+            // Tìm các giao dịch của khách hàng có mã KH10
+            data = HoaDonGiaoDich.filter(hd => hd.MaKH === 'KH10')
+                .map(hd => {
+                    const h = HangHoa.find(item => item.MaHH === hd.MaHH);
+                    return [hd.MaGD, hd.ThoiGian, h ? h.Ten : hd.MaHH, hd.ThanhTienSauGiam.toLocaleString() + " đ"];
+                });
+            break;
+
+        case '4.3.16': // Khách hàng mua nhiều nhất
+            resultTitle.innerText = "Kết quả: Khách hàng mua nhiều sản phẩm nhất";
+            headers = ["Mã KH", "Tên Khách Hàng", "Tổng SP đã mua"];
+            const custMap = {};
+            HoaDonGiaoDich.forEach(hd => {
+                custMap[hd.MaKH] = (custMap[hd.MaKH] || 0) + hd.SoLuong;
+            });
+            const topCustId = Object.keys(custMap).sort((a, b) => custMap[b] - custMap[a])[0];
+            const khInfo = KhachHang.find(k => k.MaKH === topCustId);
+            if (khInfo) {
+                data = [[topCustId, khInfo.HoTen, custMap[topCustId] + " sản phẩm"]];
+            }
+            break;
+
+        case '4.3.17': // Sản phẩm chưa từng bán
+            resultTitle.innerText = "Kết quả: Hàng hóa chưa từng phát sinh giao dịch";
+            headers = ["Mã HH", "Tên Sản Phẩm", "Tồn kho"];
+            const soldIds = HoaDonGiaoDich.map(hd => hd.MaHH);
+            data = HangHoa.filter(h => !soldIds.includes(h.MaHH))
+                .map(h => [h.MaHH, h.Ten, h.SoLuong]);
+            break;
+
+        case '4.3.18': // Doanh thu nhân viên
+            resultTitle.innerText = "Kết quả: Tổng doanh thu bán hàng theo nhân viên";
+            headers = ["Mã NV", "Tên Nhân Viên", "Doanh Thu"];
+            const nvSales = {};
+            HoaDonGiaoDich.forEach(hd => {
+                nvSales[hd.MaNV] = (nvSales[hd.MaNV] || 0) + hd.ThanhTienSauGiam;
+            });
+            data = Object.keys(nvSales).map(ma => {
+                const nv = NhanVien.find(n => n.MaNV === ma);
+                return [ma, nv ? nv.HoTen : ma, `<span style="color: #4db6ac; font-weight:bold;">${nvSales[ma].toLocaleString()} đ</span>`];
+            });
+            break;
+    }
+
+    renderTable(headers, data);
+}
+
+// 4. Hàm vẽ bảng
+function renderTable(headers, rows) {
+    const thead = document.getElementById('thead');
+    const tbody = document.getElementById('tbody');
+
+    thead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+    
+    if (rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 20px;">Không tìm thấy dữ liệu phù hợp.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = rows.map(row => `
+        <tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>
+    `).join('');
+}
