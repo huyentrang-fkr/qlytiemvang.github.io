@@ -6,67 +6,56 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         /* TỐI ƯU HIỂN THỊ: NỔI BẬT CHỮ VÀ DỮ LIỆU */
-        .query-section { 
-            margin-top: 30px; 
-            background: rgba(10, 35, 37, 0.9); /* Nền tối đậm để nổi chữ trắng */
-            padding: 25px; 
-            border-radius: 20px; 
-            backdrop-filter: blur(15px); 
-            border: 1px solid #26a69a; 
-            color: #ffffff; /* CHỮ NỘI DUNG MÀU TRẮNG */
+        .query-section {
+            margin-top: 30px;
+            background: rgba(10, 35, 37, 0.9);
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid #26a69a;
+            color: #ffffff;
         }
-
-        .query-select { 
-            width: 100%; 
-            padding: 15px; 
-            border-radius: 12px; 
-            background: #164245; 
-            color: #ffc107; /* CHỮ VÀNG CHO THANH CHỌN */
-            border: 2px solid #26a69a; 
-            margin-bottom: 20px; 
-            cursor: pointer; 
+        .query-select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            background: #164245;
+            color: #ffc107;
+            border: 2px solid #26a69a;
+            margin-bottom: 20px;
+            cursor: pointer;
             font-weight: bold;
             font-size: 1rem;
         }
-
-        /* TIÊU ĐỀ KẾT QUẢ MÀU XANH NGỌC SÁNG */
-        #resultTitle { 
-            color: #4db6ac; 
-            margin-bottom: 20px; 
-            display: flex; 
-            align-items: center; 
+        #resultTitle {
+            color: #4db6ac;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
             gap: 10px;
             font-size: 1.2rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
-        /* BẢNG DỮ LIỆU NỔI BẬT */
         .result-table { width: 100%; border-collapse: collapse; margin-top: 15px; color: #ffffff; }
-        
-        .result-table th { 
-            border-bottom: 2px solid #ffc107; /* Đường kẻ vàng */
-            color: #ffc107; /* Tiêu đề bảng màu Vàng */
-            text-align: left; 
-            padding: 12px; 
-            text-transform: uppercase; 
-            font-size: 0.9rem; 
+        .result-table th {
+            border-bottom: 2px solid #ffc107;
+            color: #ffc107;
+            text-align: left;
+            padding: 12px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
         }
-
-        .result-table td { 
-            padding: 12px; 
-            border-bottom: 1px solid rgba(255,255,255,0.1); 
+        .result-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             font-weight: 500;
         }
-
-        .result-table tr:hover { 
-            background: rgba(38, 166, 154, 0.2); 
+        .result-table tr:hover {
+            background: rgba(38, 166, 154, 0.2);
             transition: 0.3s;
         }
-
         .astro { width: 150px; filter: drop-shadow(0 0 15px rgba(38, 166, 154, 0.6)); }
-
-        /* Chỉnh màu các thẻ Card thống kê */
         .card h3 { color: #4db6ac !important; }
         .card p { color: #ffffff !important; font-size: 1.8rem; font-weight: bold; }
     </style>
@@ -74,7 +63,6 @@
 <body>
 
 <div class="container">
-
     <header class="topbar">
         <div class="search-box">
             <input type="text" id="mainSearch" placeholder="Tìm tên hàng, mã khách..." onkeyup="instantSearch()">
@@ -117,28 +105,42 @@
             📊 HỆ THỐNG BÁO CÁO CHI TIẾT
         </h3>
         
-    <select id="querySelector" class="query-select" onchange="handleQueryChange()">
-        <option value="">-- Truy vấn --</option>
-        
-        <optgroup label="I. TRUY VẤN LỌC & TÌM KIẾM">
-            <option value="4.3.1">Hàng hóa giá trị cao (> 15 triệu)</option>
-            <option value="4.3.3">Danh mục Nhẫn và Dây chuyền</option>
-            <option value="4.3.4">Top 5 sản phẩm giá thấp nhất</option>
-        </optgroup>
-    
-        <optgroup label="II. TRUY VẤN THỐNG KÊ DOANH THU">
-            <option value="4.3.6">Thống kê số lượng tồn kho theo loại</option>
-            <option value="4.3.13">Top 4 sản phẩm bán chạy nhất</option>
-            <option value="4.3.14">Hóa đơn có giá trị kỷ lục</option>
-            <option value="4.3.18">Doanh thu bán hàng theo nhân viên</option>
-        </optgroup>
-    
-        <optgroup label="III. TRUY VẤN KHÁCH HÀNG & THỊ TRƯỜNG">
-            <option value="4.3.15">Lịch sử mua hàng: Hoàng Thị Ngọc (KH10)</option>
-            <option value="4.3.16">Khách hàng thân thiết (Mua nhiều nhất)</option>
-            <option value="4.3.17">Danh sách hàng hóa tồn kho lâu ngày</option>
-        </optgroup>
-    </select>
+        <!-- ==================== DANH SÁCH TRUY VẤN MỚI ==================== -->
+        <select id="querySelector" class="query-select" onchange="handleQueryChange()">
+            <option value="">-- Chọn truy vấn SQL --</option>
+            
+            <optgroup label="I. TRUY VẤN HÀNG HÓA">
+                <option value="4.3.1">4.3.1. Hàng hóa giá trị > 15.000.000 VNĐ</option>
+                <option value="4.3.2">4.3.2. Hàng hóa giá từ 20.000.000 – 40.000.000 VNĐ</option>
+                <option value="4.3.3">4.3.3. Hàng hóa thuộc loại Nhẫn hoặc Dây chuyền</option>
+                <option value="4.3.4">4.3.4. Top 5 hàng hóa có giá nhỏ nhất</option>
+                <option value="4.3.6">4.3.6. Thống kê tồn kho theo nhóm hàng</option>
+                <option value="4.3.9">4.3.9. Giá trung bình / thấp nhất / cao nhất</option>
+                <option value="4.3.10">4.3.10. Nhóm hàng có giá TB > 20 triệu</option>
+            </optgroup>
+
+            <optgroup label="II. TRUY VẤN HÓA ĐƠN &amp; DOANH THU">
+                <option value="4.3.7">4.3.7. Hóa đơn từ 24/03/2026 đến 26/03/2026</option>
+                <option value="4.3.8">4.3.8. Hóa đơn trong năm 2026</option>
+                <option value="4.3.12">4.3.12. Tổng tiền của từng hóa đơn</option>
+                <option value="4.3.13">4.3.13. Top 4 hàng hóa bán chạy nhất</option>
+                <option value="4.3.14">4.3.14. Top 5 hóa đơn có tổng tiền lớn nhất</option>
+                <option value="4.3.19">4.3.19. Tổng doanh thu 01/10/2025 – 01/12/2025</option>
+                <option value="4.3.18">4.3.18. Doanh thu theo từng nhân viên</option>
+            </optgroup>
+
+            <optgroup label="III. TRUY VẤN KHÁCH HÀNG">
+                <option value="4.3.5">4.3.5. Khách hàng và hàng hóa họ đã mua</option>
+                <option value="4.3.11">4.3.11. Khách hàng đã mua HH06</option>
+                <option value="4.3.15">4.3.15. Chi tiết mua hàng của KH04</option>
+                <option value="4.3.16">4.3.16. Khách hàng mua nhiều hàng nhất</option>
+            </optgroup>
+
+            <optgroup label="IV. TRUY VẤN KHÁC">
+                <option value="4.3.17">4.3.17. Hàng hóa chưa từng được mua</option>
+            </optgroup>
+        </select>
+        <!-- ============================================================ -->
 
         <div id="resultArea">
             <h4 id="resultTitle">Sẵn sàng thực thi truy vấn...</h4>
@@ -152,7 +154,6 @@
             </div>
         </div>
     </section>
-
 </div>
 
 <script src="data.js"></script>
