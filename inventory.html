@@ -127,12 +127,12 @@
                             <th>Tên Sản Phẩm</th>
                             <th>Nguyên Liệu</th>
                             <th class="text-center">Số Lượng</th>
-                            <th class="text-end">Đơn Giá Nhập</th>
+                            <th class="text-end">Đơn Giá Hiện Tại</th>
                             <th class="text-end">Tổng Giá Trị</th>
                         </tr>
                     </thead>
                     <tbody id="inventoryBody">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -140,18 +140,33 @@
 
     <script src="data.js"></script>
     <script>
-        // Lưu ý: Đảm bảo api.js đã khai báo: HangHoa, BangGiaThiTruong
-        
         function renderInventory(data) {
             const body = document.getElementById('inventoryBody');
+            const totalInventoryDisplay = document.getElementById('totalInventoryValue');
+            const lowStockDisplay = document.getElementById('lowStockCount');
+
+            if (!body) return;
+
             let totalValue = 0;
             let lowStock = 0;
             let html = '';
 
+            // Kiểm tra xem dữ liệu có hợp lệ không
+            if (!data || data.length === 0) {
+                body.innerHTML = '<tr><td colspan="6" class="text-center py-5">Không có dữ liệu hàng hóa</td></tr>';
+                totalInventoryDisplay.innerText = '0 đ';
+                lowStockDisplay.innerText = '0 loại';
+                return;
+            }
+
             data.forEach(item => {
-                // Lấy giá từ bảng giá thị trường trong api.js
-                const giaBan = BangGiaThiTruong[item.MaNL].Ban;
-                const donGia = giaBan * item.TrongLuong;
+                // Lấy thông tin giá từ BangGiaThiTruong
+                const nguyenLieu = BangGiaThiTruong[item.MaNL];
+                const giaBanHienTai = nguyenLieu ? nguyenLieu.Ban : 0;
+                
+                // Đơn giá = Giá nguyên liệu * Trọng lượng
+                const donGia = giaBanHienTai * item.TrongLuong;
+                // Tổng giá trị = Đơn giá * Số lượng tồn kho
                 const value = donGia * item.SoLuong;
                 
                 totalValue += value;
@@ -166,7 +181,7 @@
                         </td>
                         <td>
                             <span class="badge bg-secondary opacity-75">
-                                ${BangGiaThiTruong[item.MaNL].Ten}
+                                ${nguyenLieu ? nguyenLieu.Ten : 'N/A'}
                             </span>
                         </td>
                         <td class="text-center">
@@ -180,23 +195,28 @@
                 `;
             });
 
-            body.innerHTML = html || '<tr><td colspan="6" class="text-center py-5">Không có dữ liệu</td></tr>';
-            document.getElementById('totalInventoryValue').innerText = totalValue.toLocaleString() + ' đ';
-            document.getElementById('lowStockCount').innerText = lowStock + ' loại';
+            body.innerHTML = html;
+            totalInventoryDisplay.innerText = totalValue.toLocaleString() + ' đ';
+            lowStockDisplay.innerText = lowStock + ' loại';
         }
 
         function filterInventory() {
             const mCode = document.getElementById('materialFilter').value;
-            const filtered = mCode === 'all' ? HangHoa : HangHoa.filter(h => h.MaNL === mCode);
-            renderInventory(filtered);
+            // Đảm bảo HangHoa đã được load từ data.js
+            if (typeof HangHoa !== 'undefined') {
+                const filtered = mCode === 'all' ? HangHoa : HangHoa.filter(h => h.MaNL === mCode);
+                renderInventory(filtered);
+            }
         }
 
         // Khởi tạo trang khi load xong
         window.onload = () => {
-            if (typeof HangHoa !== 'undefined') {
+            console.log("Hệ thống đang kiểm tra dữ liệu...");
+            if (typeof HangHoa !== 'undefined' && typeof BangGiaThiTruong !== 'undefined') {
                 renderInventory(HangHoa);
             } else {
-                console.error("Không tìm thấy dữ liệu HangHoa. Hãy kiểm tra file js/api.js");
+                console.error("LỖI: Không tìm thấy dữ liệu trong data.js. Kiểm tra lại đường dẫn file hoặc khai báo biến.");
+                document.getElementById('inventoryBody').innerHTML = '<tr><td colspan="6" class="text-center text-danger py-5">Lỗi: Không nạp được dữ liệu từ data.js</td></tr>';
             }
         };
     </script>
