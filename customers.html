@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Khách Hàng - Tiệm Vàng 2026</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --dark-teal: #0d2b2d;
+            --card-bg: #164245;
+            --accent-gold: #ffc107;
+        }
+        body { background-color: var(--dark-teal); color: white; font-family: 'Segoe UI', sans-serif; }
+        .header { 
+            background: linear-gradient(135deg, #164245 0%, #0d2b2d 100%); 
+            padding: 60px 0; 
+        }
+        .filter-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .table th { color: #ffc107; }
+        .badge-dong { background: #8d5524; }
+        .badge-bac { background: #c0c0c0; color: #222; }
+        .badge-vang { background: #ffc107; color: #222; }
+    </style>
+    <script src="data.js"></script>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="index.html">💎 TIỆM VÀNG 2026</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">Trang Chủ</a>
+                <a class="nav-link" href="inventory.html">Kho Hàng</a>
+                <a class="nav-link active" href="customers.html">👥 Khách hàng</a>
+                <a class="nav-link" href="sales.html">Hóa Đơn</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="header text-center">
+        <div class="container">
+            <h1 class="display-5 fw-bold">QUẢN LÝ KHÁCH HÀNG</h1>
+            <p class="lead opacity-75">Danh sách khách hàng &amp; điểm tích lũy</p>
+        </div>
+    </header>
+
+    <div class="container mt-5">
+        <div class="row g-4">
+            <!-- Bộ lọc -->
+            <div class="col-md-4">
+                <div class="filter-card p-4">
+                    <h5 class="text-warning mb-3"><i class="bi bi-search"></i> Tìm kiếm khách hàng</h5>
+                    <input type="text" id="searchInput" class="form-control bg-dark text-white border-secondary mb-3" 
+                           placeholder="Tên, mã KH hoặc số điện thoại..." onkeyup="if(event.key==='Enter') filterCustomers()">
+                    
+                    <select id="typeFilter" class="form-select bg-dark text-white border-secondary mb-3" onchange="filterCustomers()">
+                        <option value="">Tất cả loại khách</option>
+                        <option value="Đồng">Đồng</option>
+                        <option value="Bạc">Bạc</option>
+                        <option value="Vàng">Vàng</option>
+                    </select>
+
+                    <button onclick="filterCustomers()" class="btn btn-warning w-100">🔍 Tìm kiếm</button>
+                    <button onclick="resetFilter()" class="btn btn-outline-light w-100 mt-2">Reset</button>
+                </div>
+            </div>
+
+            <!-- Bảng khách hàng -->
+            <div class="col-md-8">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle" id="customerTable">
+                        <thead>
+                            <tr>
+                                <th>Mã KH</th>
+                                <th>Họ tên</th>
+                                <th>SĐT</th>
+                                <th>Địa chỉ</th>
+                                <th>Loại</th>
+                                <th class="text-end">Điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function renderCustomers(data) {
+            const tbody = document.getElementById('customerBody');
+            let html = '';
+
+            data.forEach(kh => {
+                let badge = '';
+                if (kh.Loai === 'Đồng') badge = '<span class="badge badge-dong">Đồng</span>';
+                else if (kh.Loai === 'Bạc') badge = '<span class="badge badge-bac">Bạc</span>';
+                else if (kh.Loai === 'Vàng') badge = '<span class="badge badge-vang">Vàng</span>';
+
+                html += `
+                    <tr>
+                        <td><strong>${kh.MaKH}</strong></td>
+                        <td>${kh.HoTen}</td>
+                        <td>${kh.SDT}</td>
+                        <td>${kh.DiaChi}</td>
+                        <td>${badge}</td>
+                        <td class="text-end fw-bold text-warning">${kh.Diem}</td>
+                    </tr>`;
+            });
+
+            if (data.length === 0) {
+                html = `<tr><td colspan="6" class="text-center py-5 text-muted">Không tìm thấy khách hàng nào</td></tr>`;
+            }
+
+            tbody.innerHTML = html;
+        }
+
+        function filterCustomers() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase().trim();
+            const type = document.getElementById('typeFilter').value;
+
+            let filtered = KhachHang;
+
+            if (keyword) {
+                filtered = filtered.filter(kh =>
+                    kh.HoTen.toLowerCase().includes(keyword) ||
+                    kh.MaKH.toLowerCase().includes(keyword) ||
+                    kh.SDT.includes(keyword)
+                );
+            }
+
+            if (type) {
+                filtered = filtered.filter(kh => kh.Loai === type);
+            }
+
+            renderCustomers(filtered);
+        }
+
+        function resetFilter() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('typeFilter').value = '';
+            renderCustomers(KhachHang);
+        }
+
+        // Khởi tạo trang
+        window.onload = () => {
+            if (typeof KhachHang === 'undefined') {
+                document.getElementById('customerBody').innerHTML = 
+                    `<tr><td colspan="6" class="text-danger text-center py-5">Lỗi: Không load được data.js</td></tr>`;
+                return;
+            }
+            renderCustomers(KhachHang);
+            console.log('%c✅ Trang Khách hàng đã tải thành công!', 'color:#ffc107;font-weight:bold');
+        };
+    </script>
+</body>
+</html>
