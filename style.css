@@ -1,0 +1,116 @@
+/* --- Cấu hình chung --- */
+:root {
+    --gold-primary: #ffc107;
+    --gold-dark: #e0a800;
+    --dark-bg: #212529;
+    --success-green: #198754;
+    --info-blue: #0dcaf0;
+    --light-gray: #f8f9fa;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-gray);
+    color: #333;
+}
+
+/* --- Navigation & Header --- */
+.navbar {
+    border-bottom: 3px solid var(--gold-primary);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+/* --- Dashboard Cards (Trang chủ) --- */
+.card-stats {
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.card-stats:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+
+.card-stats h2 {
+    font-size: 1.8rem;
+    margin-top: 10px;
+}
+
+/* --- Bảng dữ liệu (Tables) --- */
+.table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.table thead {
+    background-color: var(--dark-bg);
+    color: white;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 193, 7, 0.05); /* Hiệu ứng màu vàng nhạt khi di chuột */
+}
+
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 500;
+}
+
+/* --- Bộ lọc & Truy vấn (Query Section) --- */
+.card-body h5 {
+    color: var(--dark-bg);
+    border-left: 4px solid var(--gold-primary);
+    padding-left: 10px;
+}
+
+input.form-control:focus, select.form-select:focus {
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+}
+
+/* --- Inventory & Sales Specific --- */
+.inventory-header, .sales-header {
+    margin-bottom: 30px;
+    padding: 50px 0;
+    border-radius: 0 0 20px 20px;
+}
+
+.stats-box {
+    border-left: 4px solid var(--gold-primary);
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.invoice-card {
+    border-left: 5px solid var(--success-green);
+    border-radius: 8px;
+}
+
+/* --- Responsive Helpers --- */
+@media (max-width: 768px) {
+    .card-stats h2 {
+        font-size: 1.4rem;
+    }
+    
+    .inventory-header h1 {
+        font-size: 1.8rem;
+    }
+}
+
+/* Custom Scrollbar cho bảng dài */
+.table-responsive::-webkit-scrollbar {
+    width: 6px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
