@@ -5,68 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Kho Hàng - Tiệm Vàng 2026</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/icons/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        .inventory-header { background: linear-gradient(135deg, #2c3e50, #000000); color: white; padding: 40px 0; }
-        .stats-box { border-left: 4px solid #ffc107; background: #fff; padding: 15px; border-radius: 8px; shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .status-low { color: #dc3545; fw-bold; } /* Cảnh báo hàng sắp hết */
+        :root {
+            --dark-teal: #0d2b2d;
+            --accent-gold: #ffc107;
+            --card-bg: #164245;
+        }
+
+        body { background-color: var(--dark-teal); color: white; font-family: 'Segoe UI', sans-serif; }
+
+        /* Header phong cách mới */
+        .inventory-header { 
+            background: linear-gradient(135deg, #164245 0%, #0d2b2d 100%); 
+            padding: 60px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Stats Box hiện đại */
+        .stats-box { 
+            background: var(--card-bg); 
+            padding: 20px; 
+            border-radius: 20px; 
+            border-left: 5px solid var(--accent-gold);
+            transition: 0.3s;
+        }
+        .stats-box:hover { transform: translateY(-5px); }
+
+        /* Bảng dữ liệu Glassmorphism */
+        .inventory-card {
+            background: rgba(22, 66, 69, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+
+        .table { color: white; margin-bottom: 0; }
+        .table thead th { 
+            background: rgba(0,0,0,0.2); 
+            color: var(--accent-gold); 
+            border: none;
+            padding: 15px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        .table tbody td { padding: 15px; border-color: rgba(255,255,255,0.05); vertical-align: middle; }
+        .table-hover tbody tr:hover { background: rgba(255,255,255,0.05); }
+
+        .status-low { color: #ff4d4d; font-weight: bold; background: rgba(255,77,77,0.1); border-radius: 10px; padding: 5px 10px; }
+        
+        /* Navbar bo tròn */
+        .navbar { margin: 20px; border-radius: 50px; background: rgba(22, 66, 69, 0.9) !important; padding: 10px 30px; }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">💎 TRANG CHỦ</a>
-            <div class="navbar-nav">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="index.html">💎 TIỆM VÀNG 2026</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">Trang Chủ</a>
                 <a class="nav-link active" href="inventory.html">Kho Hàng</a>
                 <a class="nav-link" href="sales.html">Hóa Đơn</a>
             </div>
         </div>
     </nav>
 
-    <header class="inventory-header text-center shadow">
+    <header class="inventory-header text-center">
         <div class="container">
-            <h1 class="display-5 fw-bold">QUẢN LÝ TỒN KHO</h1>
-            <p class="lead">Theo dõi số lượng, nguyên liệu và giá trị tài sản thực tế</p>
+            <h1 class="display-4 fw-bold">QUẢN LÝ TỒN KHO</h1>
+            <p class="lead opacity-75">Hệ thống theo dõi tài sản và nguyên liệu thời gian thực</p>
         </div>
     </header>
 
-    <div class="container mt-n4">
-        <div class="row g-3 mb-4">
-            <div class="col-md-3">
-                <div class="stats-box shadow-sm">
-                    <small class="text-muted">Tổng vốn tồn kho</small>
-                    <h5 id="totalInventoryValue" class="m-0 text-primary">Đang tính...</h5>
+    <div class="container" style="margin-top: -40px;">
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="stats-box shadow">
+                    <div class="text-muted small mb-1">TỔNG VỐN TỒN KHO</div>
+                    <h3 id="totalInventoryValue" class="m-0 text-warning">0 đ</h3>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="stats-box shadow-sm" style="border-left-color: #28a745;">
-                    <small class="text-muted">Sản phẩm bán chạy</small>
-                    <h5 class="m-0">Vàng miếng SJC</h5>
+            <div class="col-md-4">
+                <div class="stats-box shadow" style="border-left-color: #26a69a;">
+                    <div class="text-muted small mb-1">MẶT HÀNG SẮP HẾT</div>
+                    <h3 id="lowStockCount" class="m-0 text-info">0 loại</h3>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="stats-box shadow-sm" style="border-left-color: #dc3545;">
-                    <small class="text-muted">Mặt hàng sắp hết</small>
-                    <h5 id="lowStockCount" class="m-0 text-danger">0 loại</h5>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-box shadow-sm" style="border-left-color: #17a2b8;">
-                    <small class="text-muted">Cập nhật lần cuối</small>
-                    <h5 class="m-0 small">26/03/2026</h5>
+            <div class="col-md-4">
+                <div class="stats-box shadow" style="border-left-color: #00bcd4;">
+                    <div class="text-muted small mb-1">CẬP NHẬT TỶ GIÁ</div>
+                    <h3 class="m-0 small">Hôm nay, 2026</h3>
                 </div>
             </div>
         </div>
 
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3">
+        <div class="inventory-card shadow">
+            <div class="card-header border-0 bg-transparent py-4 px-4">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h5 class="m-0 fw-bold"><i class="bi bi-box-seam"></i> Danh Mục Lưu Kho</h5>
+                        <h4 class="m-0"><i class="bi bi-boxes me-2"></i>Danh Mục Hàng Hóa</h4>
                     </div>
                     <div class="col-auto">
-                        <select id="materialFilter" class="form-select form-select-sm" onchange="filterInventory()">
+                        <select id="materialFilter" class="form-select bg-dark text-white border-secondary" onchange="filterInventory()">
                             <option value="all">Tất cả nguyên liệu</option>
                             <option value="V9999">Vàng 24K (9999)</option>
                             <option value="V750">Vàng 18K (750)</option>
@@ -75,9 +118,10 @@
                     </div>
                 </div>
             </div>
+            
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table table-hover">
+                    <thead>
                         <tr>
                             <th>Mã</th>
                             <th>Tên Sản Phẩm</th>
@@ -94,8 +138,10 @@
         </div>
     </div>
 
-    <script src="data.js"></script>
+    <script src="js/api.js"></script>
     <script>
+        // Lưu ý: Đảm bảo api.js đã khai báo: HangHoa, BangGiaThiTruong
+        
         function renderInventory(data) {
             const body = document.getElementById('inventoryBody');
             let totalValue = 0;
@@ -103,27 +149,38 @@
             let html = '';
 
             data.forEach(item => {
+                // Lấy giá từ bảng giá thị trường trong api.js
                 const giaBan = BangGiaThiTruong[item.MaNL].Ban;
-                const value = giaBan * item.TrongLuong * item.SoLuong;
-                totalValue += value;
+                const donGia = giaBan * item.TrongLuong;
+                const value = donGia * item.SoLuong;
                 
+                totalValue += value;
                 if(item.SoLuong < 5) lowStock++;
 
                 html += `
                     <tr>
-                        <td><small class="text-muted">${item.MaHH}</small></td>
-                        <td class="fw-bold">${item.Ten}</td>
-                        <td><span class="badge bg-light text-dark border">${BangGiaThiTruong[item.MaNL].Ten}</span></td>
-                        <td class="text-center ${item.SoLuong < 5 ? 'status-low' : ''}">
-                            ${item.SoLuong}
+                        <td><code class="text-info">${item.MaHH}</code></td>
+                        <td>
+                            <div class="fw-bold">${item.Ten}</div>
+                            <small class="text-muted">${item.TrongLuong} chỉ</small>
                         </td>
-                        <td class="text-end">${(giaBan * item.TrongLuong).toLocaleString()} đ</td>
-                        <td class="text-end fw-bold text-success">${value.toLocaleString()} đ</td>
+                        <td>
+                            <span class="badge bg-secondary opacity-75">
+                                ${BangGiaThiTruong[item.MaNL].Ten}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <span class="${item.SoLuong < 5 ? 'status-low' : 'fw-bold'}">
+                                ${item.SoLuong}
+                            </span>
+                        </td>
+                        <td class="text-end text-muted">${donGia.toLocaleString()} đ</td>
+                        <td class="text-end fw-bold text-warning">${value.toLocaleString()} đ</td>
                     </tr>
                 `;
             });
 
-            body.innerHTML = html;
+            body.innerHTML = html || '<tr><td colspan="6" class="text-center py-5">Không có dữ liệu</td></tr>';
             document.getElementById('totalInventoryValue').innerText = totalValue.toLocaleString() + ' đ';
             document.getElementById('lowStockCount').innerText = lowStock + ' loại';
         }
@@ -134,8 +191,14 @@
             renderInventory(filtered);
         }
 
-        // Khởi tạo trang
-        window.onload = () => renderInventory(HangHoa);
+        // Khởi tạo trang khi load xong
+        window.onload = () => {
+            if (typeof HangHoa !== 'undefined') {
+                renderInventory(HangHoa);
+            } else {
+                console.error("Không tìm thấy dữ liệu HangHoa. Hãy kiểm tra file js/api.js");
+            }
+        };
     </script>
 </body>
 </html>
