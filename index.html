@@ -1,32 +1,41 @@
 <div class="app-container">
+
+    <!-- HEADER -->
     <header class="top-bar">
+        <div class="logo">💎 QL Tiệm Vàng</div>
+
         <div class="search-box">
             <input type="text" placeholder="Search hàng hóa, hóa đơn...">
             <button>🔍</button>
         </div>
+
         <div class="user-profile">
-            <span>Admin Huyển Trang</span>
+            <span>Admin Huyền Trang</span>
             <div class="avatar"></div>
         </div>
     </header>
 
+    <!-- HERO -->
     <section class="hero-section">
         <div class="hero-content">
-            <h1>TIỆM VÀNG <span>2026</span></h1>
-            <p>Hệ thống quản lý kho và giao dịch chuyên nghiệp.</p>
+            <h1>GOLD <span>DASHBOARD</span></h1>
+            <p>Quản lý kho, giao dịch & phân tích dữ liệu.</p>
+
             <div class="hero-buttons">
-                <button class="btn-primary">Get Started</button>
-                <button class="btn-secondary">Accounting</button>
+                <button class="btn-primary" onclick="loadHighValue()">💎 Hàng giá trị cao</button>
+                <button class="btn-secondary" onclick="loadJewelry()">💍 Nhẫn & dây chuyền</button>
             </div>
         </div>
+
         <div class="hero-image-placeholder">
             <div class="inner-card">
-                <h3>Tỷ giá hôm nay</h3>
-                <p>Vàng 9999: 8.600.000đ</p>
+                <h3>📊 Giá hôm nay</h3>
+                <p id="goldPrice">Loading...</p>
             </div>
         </div>
     </section>
 
+    <!-- STATS -->
     <section class="stats-grid">
         <div class="stat-card gold">
             <div class="icon">📦</div>
@@ -34,39 +43,55 @@
                 <h4>Tổng Kho</h4>
                 <h2 id="totalStock">0</h2>
             </div>
-            <button class="next-btn">→</button>
         </div>
+
         <div class="stat-card revenue">
             <div class="icon">💰</div>
             <div>
                 <h4>Doanh Thu</h4>
                 <h2 id="totalRevenue">0 VNĐ</h2>
             </div>
-            <button class="next-btn">→</button>
+        </div>
+
+        <div class="stat-card top">
+            <div class="icon">🏆</div>
+            <div>
+                <h4>Bán chạy</h4>
+                <h2 id="topProduct">---</h2>
+            </div>
         </div>
     </section>
 
+    <!-- QUERY SELECT -->
+    <section class="query-section">
+        <h3>🔍 Truy vấn nhanh</h3>
+        <div class="query-buttons">
+            <button onclick="loadHighValue()">Hàng giá trị cao</button>
+            <button onclick="loadTop5()">Top 5 giá thấp</button>
+            <button onclick="loadTopSelling()">Top bán chạy</button>
+            <button onclick="loadRevenue()">Doanh thu</button>
+        </div>
+    </section>
+
+    <!-- TABLE -->
     <section class="data-section">
         <div class="section-header">
             <h3>Danh sách sản phẩm</h3>
-            <div class="tabs">
-                <span class="active">Galaxy</span>
-                <span>Green Pea</span>
-            </div>
         </div>
+
         <div class="table-container">
             <table class="custom-table">
                 <thead>
                     <tr>
-                        <th>Mã HH</th>
-                        <th>Tên Sản Phẩm</th>
-                        <th>Giá Trị</th>
-                        <th>Thao tác</th>
+                        <th>Mã</th>
+                        <th>Tên</th>
+                        <th>Giá trị</th>
+                        <th>Số lượng</th>
                     </tr>
                 </thead>
-                <tbody id="resultTable">
-                    </tbody>
+                <tbody id="resultTable"></tbody>
             </table>
         </div>
     </section>
+
 </div>
