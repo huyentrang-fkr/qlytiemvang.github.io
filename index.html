@@ -1,116 +1,72 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Quản Lý Tiệm Vàng 2026</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .card-stats { transition: transform 0.3s; }
-        .card-stats:hover { transform: translateY(-5px); }
-        .table-responsive { max-height: 600px; overflow-y: auto; }
-    </style>
-</head>
-<body class="bg-light">
+<div class="app-container">
+    <header class="top-bar">
+        <div class="search-box">
+            <input type="text" placeholder="Search hàng hóa, hóa đơn...">
+            <button>🔍</button>
+        </div>
+        <div class="user-profile">
+            <span>Admin Huyển Trang</span>
+            <div class="avatar"></div>
+        </div>
+    </header>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">💎 TIỆM VÀNG NHÓM 2</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Kho Hàng</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Hóa Đơn</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Nhân Viên</a></li>
-                </ul>
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>TIỆM VÀNG <span>2026</span></h1>
+            <p>Hệ thống quản lý kho và giao dịch chuyên nghiệp.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary">Get Started</button>
+                <button class="btn-secondary">Accounting</button>
             </div>
         </div>
-    </nav>
-
-    <div class="container mt-4">
-        <div class="row text-center mb-4">
-            <div class="col-md-4 mb-3">
-                <div class="card card-stats bg-warning text-dark shadow-sm p-3 border-0">
-                    <h6 class="text-uppercase fw-bold">Tổng Sản Phẩm Tồn</h6>
-                    <h2 id="totalStock" class="fw-bold">0</h2>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card card-stats bg-success text-white shadow-sm p-3 border-0">
-                    <h6 class="text-uppercase fw-bold">Doanh Thu Hệ Thống</h6>
-                    <h2 id="totalRevenue" class="fw-bold">0 VNĐ</h2>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card card-stats bg-info text-white shadow-sm p-3 border-0">
-                    <h6 class="text-uppercase fw-bold">Tổng Khách Hàng</h6>
-                    <h2 id="totalCust" class="fw-bold">15</h2>
-                </div>
+        <div class="hero-image-placeholder">
+            <div class="inner-card">
+                <h3>Tỷ giá hôm nay</h3>
+                <p>Vàng 9999: 8.600.000đ</p>
             </div>
         </div>
+    </section>
 
-        <div class="card mb-4 shadow-sm border-0">
-            <div class="card-body">
-                <h5 class="card-title fw-bold mb-3">🔍 Truy vấn dữ liệu</h5>
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label small fw-bold">Tìm kiếm tên/mã:</label>
-                        <input type="text" id="searchInput" class="form-control" placeholder="Ví dụ: Nhẫn, Dây chuyền, HH01..." onkeyup="executeQueries()">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small fw-bold">Nhóm hàng hóa:</label>
-                        <select id="categoryFilter" class="form-select" onchange="executeQueries()">
-                            <option value="all">-- Tất cả nhóm --</option>
-                            <option value="VangMieng">Vàng tích trữ (Miếng/Thỏi)</option>
-                            <option value="Nhan">Các loại Nhẫn</option>
-                            <option value="DayChuyen">Dây chuyền & Kiềng</option>
-                            <option value="Bac">Trang sức Bạc</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small fw-bold">Mức giá niêm yết:</label>
-                        <select id="priceFilter" class="form-select" onchange="executeQueries()">
-                            <option value="0">-- Mọi mức giá --</option>
-                            <option value="15000000">Trên 15.000.000đ</option>
-                            <option value="100000000">Trên 100.000.000đ</option>
-                            <option value="1000000000">Trên 1 Tỷđ</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button class="btn btn-dark w-100" onclick="executeQueries()">Làm mới</button>
-                    </div>
-                </div>
+    <section class="stats-grid">
+        <div class="stat-card gold">
+            <div class="icon">📦</div>
+            <div>
+                <h4>Tổng Kho</h4>
+                <h2 id="totalStock">0</h2>
+            </div>
+            <button class="next-btn">→</button>
+        </div>
+        <div class="stat-card revenue">
+            <div class="icon">💰</div>
+            <div>
+                <h4>Doanh Thu</h4>
+                <h2 id="totalRevenue">0 VNĐ</h2>
+            </div>
+            <button class="next-btn">→</button>
+        </div>
+    </section>
+
+    <section class="data-section">
+        <div class="section-header">
+            <h3>Danh sách sản phẩm</h3>
+            <div class="tabs">
+                <span class="active">Galaxy</span>
+                <span>Green Pea</span>
             </div>
         </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h4 class="fw-bold text-dark m-0">Danh Sách Hàng Hóa</h4>
-            <span id="queryStatus" class="badge bg-secondary">Đang tải dữ liệu...</span>
-        </div>
-        
-        <div class="table-responsive shadow-sm rounded">
-            <table class="table table-hover bg-white m-0">
-                <thead class="table-dark">
+        <div class="table-container">
+            <table class="custom-table">
+                <thead>
                     <tr>
-                        <th class="ps-3">Mã HH</th>
+                        <th>Mã HH</th>
                         <th>Tên Sản Phẩm</th>
-                        <th>Trọng Lượng</th>
-                        <th>Giá Niêm Yết (1 Món)</th>
-                        <th>Giá Trị Kho</th>
-                        <th class="text-center">Trạng thái</th>
+                        <th>Giá Trị</th>
+                        <th>Thao tác</th>
                     </tr>
                 </thead>
                 <tbody id="resultTable">
                     </tbody>
             </table>
         </div>
-    </div>
-
-    <footer class="text-center mt-5 pb-4 text-muted small">
-        &copy; 2026 Hệ thống Quản Lý Tiệm Vàng Demo - GitHub Pages
-    </footer>
-
-    <script src="data.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+    </section>
+</div>
