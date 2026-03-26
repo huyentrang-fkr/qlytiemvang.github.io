@@ -1,116 +1,143 @@
-/* --- Cấu hình chung --- */
 :root {
-    --gold-primary: #ffc107;
-    --gold-dark: #e0a800;
-    --dark-bg: #212529;
-    --success-green: #198754;
-    --info-blue: #0dcaf0;
-    --light-gray: #f8f9fa;
+    --bg-color: #0d2b2d;
+    --card-bg: #164245;
+    --text-color: #e0f2f1;
+    --accent-color: #26a69a;
+    --border-radius: 40px; /* Bo góc cực đại như ảnh */
+    --shadow: 10px 10px 20px rgba(0,0,0,0.3);
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--light-gray);
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 20px;
 }
 
-/* --- Navigation & Header --- */
-.navbar {
-    border-bottom: 3px solid var(--gold-primary);
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.navbar-brand {
-    font-size: 1.5rem;
-    letter-spacing: 1px;
-}
-
-/* --- Dashboard Cards (Trang chủ) --- */
-.card-stats {
-    border: none;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-}
-
-.card-stats:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
-}
-
-.card-stats h2 {
-    font-size: 1.8rem;
-    margin-top: 10px;
-}
-
-/* --- Bảng dữ liệu (Tables) --- */
-.table {
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    vertical-align: middle;
-}
-
-.table thead {
-    background-color: var(--dark-bg);
-    color: white;
-}
-
-.table-hover tbody tr:hover {
-    background-color: rgba(255, 193, 7, 0.05); /* Hiệu ứng màu vàng nhạt khi di chuột */
-}
-
-.badge {
-    padding: 0.5em 0.8em;
-    font-weight: 500;
-}
-
-/* --- Bộ lọc & Truy vấn (Query Section) --- */
-.card-body h5 {
-    color: var(--dark-bg);
-    border-left: 4px solid var(--gold-primary);
-    padding-left: 10px;
-}
-
-input.form-control:focus, select.form-select:focus {
-    border-color: var(--gold-primary);
-    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
-}
-
-/* --- Inventory & Sales Specific --- */
-.inventory-header, .sales-header {
+/* Thanh tìm kiếm bo tròn */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 30px;
-    padding: 50px 0;
-    border-radius: 0 0 20px 20px;
 }
 
-.stats-box {
-    border-left: 4px solid var(--gold-primary);
-    background: white;
+.search-box {
+    background: var(--card-bg);
+    padding: 10px 25px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    width: 60%;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.search-box input {
+    background: none;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+}
+
+/* Khối Hero giống ảnh */
+.hero-section {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    position: relative;
+    box-shadow: var(--shadow);
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin: 0;
+    letter-spacing: -2px;
+}
+
+.hero-content h1 span {
+    color: var(--accent-color);
+}
+
+.hero-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+button {
+    cursor: pointer;
+    border-radius: 20px;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    padding: 12px 30px;
+    font-weight: bold;
+}
+
+/* Stat Cards kiểu khối tách biệt */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.next-btn {
+    background: var(--bg-color);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+/* Bảng dữ liệu Glassmorphism */
+.data-section {
+    margin-top: 40px;
+    background: rgba(22, 66, 69, 0.5);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    backdrop-filter: blur(10px);
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.custom-table th {
+    text-align: left;
     padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    color: var(--accent-color);
 }
 
-.invoice-card {
-    border-left: 5px solid var(--success-green);
-    border-radius: 8px;
+.custom-table td {
+    background: var(--card-bg);
+    padding: 20px;
 }
 
-/* --- Responsive Helpers --- */
-@media (max-width: 768px) {
-    .card-stats h2 {
-        font-size: 1.4rem;
-    }
-    
-    .inventory-header h1 {
-        font-size: 1.8rem;
-    }
-}
-
-/* Custom Scrollbar cho bảng dài */
-.table-responsive::-webkit-scrollbar {
-    width: 6px;
-}
-.table-responsive::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 10px;
-}
+.custom-table tr td:first-child { border-radius: 20px 0 0 20px; }
+.custom-table tr td:last-child { border-radius: 0 20px 20px 0; }
