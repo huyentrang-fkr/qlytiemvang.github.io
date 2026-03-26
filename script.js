@@ -1,108 +1,115 @@
-// Biến lưu trữ chế độ truy vấn hiện tại
-let currentQueryMode = 'default';
+/**
+ * HÀM THỰC THI TRUY VẤN THEO MÃ SỐ (Từ 4.3.1 đến 4.3.19)
+ * @param {string} queryId - Mã câu hỏi trong báo cáo (VD: '4.3.1')
+ */
+function executeQuery(queryId) {
+    let result = [];
+    let title = "";
+    let headers = [];
 
-// Hàm để thay đổi truy vấn từ giao diện (gọi khi bấm nút)
-function setQueryMode(mode) {
-    currentQueryMode = mode;
-    executeQueries();
-}
+    switch (queryId) {
+        case '4.3.1': // Liệt kê hàng hóa có giá trên 15.000.000
+            title = "4.3.1. Hàng hóa giá trị > 15 triệu";
+            headers = ["Mã HH", "Tên", "Trọng lượng", "Tổng giá trị"];
+            result = HangHoa.map(hh => {
+                const giaBanRa = BangGiaThiTruong[hh.MaNL].Ban;
+                return { ...hh, TongGiaTri: hh.TrongLuong * giaBanRa };
+            }).filter(h => h.TongGiaTri > 15000000)
+              .sort((a, b) => b.TongGiaTri - a.TongGiaTri);
+            break;
 
-function executeQueries() {
-    const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || "";
-    const category = document.getElementById('categoryFilter')?.value || "all";
-    const minPrice = parseFloat(document.getElementById('priceFilter')?.value || 0);
+        case '4.3.3': // Loại "Nhẫn" hoặc "Dây chuyền"
+            title = "4.3.3. Nhẫn hoặc Dây chuyền";
+            headers = ["Mã HH", "Tên", "Nguyên liệu", "Giá trị 1 món"];
+            result = HangHoa.filter(h => h.Ten.includes("Nhẫn") || h.Ten.includes("Dây chuyền"))
+                .map(h => ({
+                    ...h, 
+                    DonGia: BangGiaThiTruong[h.MaNL].Ban,
+                    GiaTriMotMon: h.TrongLuong * BangGiaThiTruong[h.MaNL].Ban
+                }));
+            break;
 
-    let displayData = [];
-    let customHeaders = null; // Dùng cho các bảng có cấu trúc khác nhau (như thống kê)
-
-    // MÔ PHỎNG CÁC TRUY VẤN SQL
-    switch (currentQueryMode) {
-        
-        case '4.3.4': // Liệt kê 5 hàng hóa có giá nhỏ nhất (TOP 5 ... ORDER BY ASC)
-            displayData = [...HangHoa]
-                .sort((a, b) => (a.TrongLuong * BangGiaThiTruong[a.MaNL].Ban) - (b.TrongLuong * BangGiaThiTruong[b.MaNL].Ban))
-                .slice(0, 5);
+        case '4.3.4': // TOP 5 hàng hóa giá nhỏ nhất
+            title = "4.3.4. 5 hàng hóa giá thấp nhất";
+            headers = ["Mã HH", "Tên", "Giá trị"];
+            result = HangHoa.map(h => ({
+                ...h, 
+                GiaTri: h.TrongLuong * BangGiaThiTruong[h.MaNL].Ban
+            })).sort((a, b) => a.GiaTri - b.GiaTri).slice(0, 5);
             break;
 
         case '4.3.6': // Đếm số lượng theo loại (GROUP BY + CASE WHEN)
-            const groups = {};
-            HangHoa.forEach(item => {
-                let type = "Khác";
-                if (item.Ten.includes("Nhẫn")) type = "Nhẫn Vàng/Bạc";
-                else if (item.Ten.includes("Dây chuyền") || item.Ten.includes("Kiềng")) type = "Dây chuyền/Kiềng";
-                else if (item.Ten.includes("miếng")) type = "Vàng tích trữ";
+            title = "4.3.6. Thống kê theo loại hàng hóa";
+            headers = ["Nhóm Hàng Hóa", "Tổng Số Lượng Tồn"];
+            const stats = {};
+            HangHoa.forEach(h => {
+                let nhom = "Khác";
+                if (h.Ten.includes("Nhẫn") && h.MaNL.startsWith("V")) nhom = "Nhẫn Vàng";
+                else if (h.Ten.includes("Nhẫn") && h.MaNL.startsWith("B")) nhom = "Nhẫn Bạc";
+                else if (h.Ten.includes("miếng")) nhom = "Vàng tích trữ";
                 
-                groups[type] = (groups[type] || 0) + item.SoLuong;
+                stats[nhom] = (stats[nhom] || 0) + h.SoLuong;
             });
-            displayData = Object.keys(groups).map(key => ({ label: key, value: groups[key] }));
-            customHeaders = ["Nhóm Hàng Hóa", "Tổng Số Lượng Tồn"];
+            result = Object.keys(stats).map(k => ({ Nhom: k, Tong: stats[k] }));
             break;
 
-        case '4.3.17': // Hàng hóa chưa từng được mua (LEFT JOIN ... WHERE ... IS NULL)
-            const soldIds = HoaDonGiaoDich.map(hd => hd.MaHH);
-            displayData = HangHoa.filter(item => !soldIds.includes(item.MaHH));
+        case '4.3.13': // 4 hàng hóa mua nhiều nhất
+            title = "4.3.13. Top 4 hàng hóa bán chạy";
+            headers = ["Mã HH", "Tên", "Tổng lượng bán"];
+            const salesCount = {};
+            ChiTietHoaDon.forEach(ct => {
+                salesCount[ct.MaHH] = (salesCount[ct.MaHH] || 0) + ct.SoLuong;
+            });
+            result = Object.keys(salesCount).map(id => {
+                const hh = HangHoa.find(h => h.MaHH === id);
+                return { MaHH: id, Ten: hh.Ten, Tong: salesCount[id] };
+            }).sort((a, b) => b.Tong - a.Tong).slice(0, 4);
             break;
 
-        case '4.3.18': // Doanh thu theo nhân viên (GROUP BY + SUM)
+        case '4.3.17': // Hàng hóa chưa từng được mua (LEFT JOIN ... NULL)
+            title = "4.3.17. Hàng hóa chưa từng được mua";
+            headers = ["Mã HH", "Tên", "Trọng lượng"];
+            const soldIds = ChiTietHoaDon.map(ct => ct.MaHH);
+            result = HangHoa.filter(h => !soldIds.includes(h.MaHH));
+            break;
+
+        case '4.3.18': // Doanh thu theo nhân viên
+            title = "4.3.18. Doanh thu theo nhân viên";
+            headers = ["Mã NV", "Tên NV", "Doanh thu"];
             const nvSales = {};
             HoaDonGiaoDich.forEach(hd => {
-                nvSales[hd.MaNV] = (nvSales[hd.MaNV] || 0) + hd.ThanhTienSauGiam;
+                const total = ChiTietHoaDon.filter(ct => ct.MaGD === hd.MaGD)
+                              .reduce((s, ct) => s + ct.ThanhTienSauGiam, 0);
+                nvSales[hd.MaNV] = (nvSales[hd.MaNV] || 0) + total;
             });
-            displayData = Object.keys(nvSales).map(ma => ({ label: ma, value: nvSales[ma] }));
-            customHeaders = ["Mã Nhân Viên", "Tổng Doanh Thu"];
+            result = Object.keys(nvSales).map(id => {
+                const nv = NhanVien.find(n => n.MaNV === id);
+                return { MaNV: id, Ten: nv.HoTen, DoanhThu: nvSales[id] };
+            }).sort((a, b) => b.DoanhThu - a.DoanhThu);
             break;
 
-        default: // Mặc định (Kết hợp 4.3.1, 4.3.2, 4.3.3)
-            displayData = HangHoa.filter(item => {
-                const giaBanRa = BangGiaThiTruong[item.MaNL].Ban;
-                const thanhTien = item.TrongLuong * giaBanRa;
-
-                const matchSearch = item.Ten.toLowerCase().includes(searchTerm) || item.MaHH.toLowerCase().includes(searchTerm);
-                const matchPrice = thanhTien >= minPrice;
-                
-                let matchCategory = true;
-                if (category === "VangMieng") matchCategory = item.Ten.includes("miếng");
-                else if (category === "Nhan") matchCategory = item.Ten.includes("Nhẫn");
-                else if (category === "Bac") matchCategory = item.MaNL.startsWith("B");
-
-                return matchSearch && matchPrice && matchCategory;
-            });
+        default:
+            alert("Truy vấn này đang được cập nhật!");
+            return;
     }
 
-    renderResults(displayData, customHeaders);
+    renderTable(title, headers, result);
 }
 
-function renderResults(data, customHeaders) {
-    const tableHead = document.querySelector('thead');
-    const tableBody = document.getElementById('resultTable');
-    const status = document.getElementById('queryStatus');
+/**
+ * HÀM HIỂN THỊ KẾT QUẢ RA BẢNG HTML
+ */
+function renderTable(title, headers, data) {
+    document.getElementById('queryTitle').innerText = title;
+    const headerRow = document.getElementById('queryHeader');
+    const bodyRow = document.getElementById('queryBody');
 
-    // Nếu là báo cáo thống kê (4.3.6, 4.3.18), thay đổi tiêu đề bảng
-    if (customHeaders) {
-        tableHead.innerHTML = `<tr><th>${customHeaders[0]}</th><th>${customHeaders[1]}</th><th>Thao tác</th></tr>`;
-        tableBody.innerHTML = data.map(item => `
-            <tr>
-                <td><strong>${item.label}</strong></td>
-                <td class="text-primary fw-bold">${item.value.toLocaleString()}</td>
-                <td><button class="btn btn-sm btn-light">Chi tiết</button></td>
-            </tr>
-        `).join('');
-    } else {
-        // Render bảng hàng hóa tiêu chuẩn
-        tableHead.innerHTML = `<tr><th>Mã HH</th><th>Tên Sản Phẩm</th><th>Trọng Lượng</th><th>Đơn Giá</th><th>Thành Tiền</th><th>Thao tác</th></tr>`;
-        tableBody.innerHTML = data.map(item => {
-            const gia = BangGiaThiTruong[item.MaNL].Ban;
-            return `
-                <tr>
-                    <td><span class="badge bg-secondary">${item.MaHH}</span></td>
-                    <td>${item.Ten}</td>
-                    <td>${item.TrongLuong} chỉ</td>
-                    <td>${gia.toLocaleString()}</td>
-                    <td class="text-primary fw-bold">${(item.TrongLuong * gia).toLocaleString()} đ</td>
-                    <td><button class="btn btn-sm btn-outline-success">Sửa</button></td>
-                </tr>`;
-        }).join('');
-    }
-
-    status.innerText = `Tìm thấy ${data.length} kết quả phù hợp.`;
+    headerRow.innerHTML = headers.map(h => `<th>${h}</th>`).join('');
+    bodyRow.innerHTML = data.map(row => {
+        const values = Object.values(row);
+        // Định dạng tiền tệ cho các cột liên quan đến giá
+        return `<tr>${values.map(v => 
+            `<td>${typeof v === 'number' && v > 1000 ? v.toLocaleString() + ' đ' : v}</td>`
+        ).join('')}</tr>`;
+    }).join('');
 }
