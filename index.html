@@ -5,15 +5,70 @@
     <title>Gold Shop Dashboard - Quản Lý Tiệm Vàng</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* CSS bổ sung để giao diện chuyên nghiệp hơn */
-        .query-section { margin-top: 30px; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .query-select { width: 100%; padding: 15px; border-radius: 12px; background: #164245; color: #26a69a; border: 1px solid #26a69a; margin-bottom: 20px; cursor: pointer; font-weight: bold; }
-        .result-table { width: 100%; border-collapse: collapse; margin-top: 15px; color: white; }
-        .result-table th { border-bottom: 2px solid #26a69a; color: #26a69a; text-align: left; padding: 12px; text-transform: uppercase; font-size: 0.85rem; }
-        .result-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .result-table tr:hover { background: rgba(38, 166, 154, 0.1); }
-        .astro { width: 150px; filter: drop-shadow(0 0 10px rgba(38, 166, 154, 0.5)); }
-        #resultTitle { color: #26a69a; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        /* TỐI ƯU HIỂN THỊ: NỔI BẬT CHỮ VÀ DỮ LIỆU */
+        .query-section { 
+            margin-top: 30px; 
+            background: rgba(10, 35, 37, 0.9); /* Nền tối đậm để nổi chữ trắng */
+            padding: 25px; 
+            border-radius: 20px; 
+            backdrop-filter: blur(15px); 
+            border: 1px solid #26a69a; 
+            color: #ffffff; /* CHỮ NỘI DUNG MÀU TRẮNG */
+        }
+
+        .query-select { 
+            width: 100%; 
+            padding: 15px; 
+            border-radius: 12px; 
+            background: #164245; 
+            color: #ffc107; /* CHỮ VÀNG CHO THANH CHỌN */
+            border: 2px solid #26a69a; 
+            margin-bottom: 20px; 
+            cursor: pointer; 
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* TIÊU ĐỀ KẾT QUẢ MÀU XANH NGỌC SÁNG */
+        #resultTitle { 
+            color: #4db6ac; 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* BẢNG DỮ LIỆU NỔI BẬT */
+        .result-table { width: 100%; border-collapse: collapse; margin-top: 15px; color: #ffffff; }
+        
+        .result-table th { 
+            border-bottom: 2px solid #ffc107; /* Đường kẻ vàng */
+            color: #ffc107; /* Tiêu đề bảng màu Vàng */
+            text-align: left; 
+            padding: 12px; 
+            text-transform: uppercase; 
+            font-size: 0.9rem; 
+        }
+
+        .result-table td { 
+            padding: 12px; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            font-weight: 500;
+        }
+
+        .result-table tr:hover { 
+            background: rgba(38, 166, 154, 0.2); 
+            transition: 0.3s;
+        }
+
+        .astro { width: 150px; filter: drop-shadow(0 0 15px rgba(38, 166, 154, 0.6)); }
+
+        /* Chỉnh màu các thẻ Card thống kê */
+        .card h3 { color: #4db6ac !important; }
+        .card p { color: #ffffff !important; font-size: 1.8rem; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -24,14 +79,14 @@
         <div class="search-box">
             <input type="text" id="mainSearch" placeholder="Tìm tên hàng, mã khách..." onkeyup="instantSearch()">
         </div>
-        <div class="user">👤 Admin Huyền Trang</div>
+        <div class="user" style="color: #ffc107; font-weight: bold;">👤 Admin: Lã Huyền Trang</div>
     </header>
 
     <section class="hero">
         <div class="hero-text">
-            <h1>TIỆM VÀNG <span>2026</span></h1>
-            <p>Hệ thống quản lý dữ liệu chuyên nghiệp (Nhóm 2)</p>
-            <button onclick="document.getElementById('querySelector').focus()">Bắt đầu truy vấn ↓</button>
+            <h1 style="color: #ffffff;">TIỆM VÀNG <span style="color: #ffc107;">2026</span></h1>
+            <p style="color: #e0e0e0;">Hệ thống quản lý dữ liệu chuyên nghiệp (Nhóm 2)</p>
+            <button onclick="document.getElementById('querySelector').focus()" style="background: #ffc107; color: #164245; font-weight: bold;">Bắt đầu truy vấn ↓</button>
         </div>
         <img src="assets/astronaut.png" class="astro" alt="Astronaut">
     </section>
@@ -58,32 +113,40 @@
     </section>
 
     <section class="query-section">
-        <h3 style="margin-bottom: 20px;"><i class="bi bi-database-check"></i> Hệ Thống Truy Vấn Báo Cáo</h3>
+        <h3 style="margin-bottom: 20px; color: #ffc107; display: flex; align-items: center; gap: 10px;">
+            📊 HỆ THỐNG BÁO CÁO CHI TIẾT
+        </h3>
         
         <select id="querySelector" class="query-select" onchange="handleQueryChange()">
-            <option value="">-- Chọn câu hỏi truy vấn (Mục 4.3) --</option>
-            <optgroup label="Truy vấn lọc & Sắp xếp">
-                <option value="4.3.1">4.3.1. Hàng hóa giá trên 15.000.000</option>
-                <option value="4.3.3">4.3.3. Các loại Nhẫn & Dây chuyền</option>
-                <option value="4.3.4">4.3.4. Top 5 hàng hóa giá thấp nhất</option>
+            <option value="">-- Click để chọn câu hỏi truy vấn báo cáo --</option>
+            
+            <optgroup label="I. TRUY VẤN LỌC & TÌM KIẾM">
+                <option value="4.3.1">4.3.1. Hàng hóa giá trị cao (> 15 triệu)</option>
+                <option value="4.3.3">4.3.3. Danh mục Nhẫn và Dây chuyền</option>
+                <option value="4.3.4">4.3.4. Top 5 sản phẩm giá thấp nhất</option>
             </optgroup>
-            <optgroup label="Truy vấn Thống kê & Phân tích">
-                <option value="4.3.13">4.3.13. 4 hàng hóa bán chạy nhất</option>
-                <option value="4.3.14">4.3.14. Hóa đơn trị giá cao nhất</option>
-                <option value="4.3.15">4.3.15. Giao dịch của khách hàng KH04</option>
-                <option value="4.3.16">4.3.16. Khách hàng mua nhiều nhất</option>
-                <option value="4.3.17">4.3.17. Sản phẩm chưa từng phát sinh giao dịch</option>
-                <option value="4.3.18">4.3.18. Tổng doanh thu theo từng nhân viên</option>
+
+            <optgroup label="II. TRUY VẤN THỐNG KÊ DOANH THU">
+                <option value="4.3.6">4.3.6. Thống kê số lượng tồn kho theo loại</option>
+                <option value="4.3.13">4.3.13. Top 4 sản phẩm bán chạy nhất</option>
+                <option value="4.3.14">4.3.14. Hóa đơn có giá trị kỷ lục</option>
+                <option value="4.3.18">4.3.18. Doanh thu bán hàng theo nhân viên</option>
+            </optgroup>
+
+            <optgroup label="III. TRUY VẤN KHÁCH HÀNG & THỊ TRƯỜNG">
+                <option value="4.3.15">4.3.15. Lịch sử mua hàng: Hoàng Thị Ngọc (KH10)</option>
+                <option value="4.3.16">4.3.16. Khách hàng thân thiết (Mua nhiều nhất)</option>
+                <option value="4.3.17">4.3.17. Danh sách hàng hóa tồn kho lâu ngày</option>
             </optgroup>
         </select>
 
         <div id="resultArea">
             <h4 id="resultTitle">Sẵn sàng thực thi truy vấn...</h4>
-            <div style="overflow-x: auto;">
+            <div style="overflow-x: auto; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;">
                 <table class="result-table">
                     <thead id="thead"></thead>
                     <tbody id="tbody">
-                        <tr><td colspan="5" style="text-align: center; opacity: 0.5;">Dữ liệu sẽ hiển thị tại đây sau khi bạn chọn truy vấn.</td></tr>
+                        <tr><td colspan="5" style="text-align: center; color: #aaa; padding: 40px;">Kết quả truy vấn sẽ hiển thị tại đây...</td></tr>
                     </tbody>
                 </table>
             </div>
