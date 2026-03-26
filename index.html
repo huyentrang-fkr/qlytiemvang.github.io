@@ -5,13 +5,15 @@
     <title>Gold Shop Dashboard - Quản Lý Tiệm Vàng</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* CSS bổ sung nhanh để bảng hiển thị đẹp */
-        .query-section { margin-top: 30px; background: rgba(255,255,255,0.1); padding: 25px; border-radius: 20px; backdrop-filter: blur(10px); }
-        .query-select { width: 100%; padding: 12px; border-radius: 10px; background: #164245; color: white; border: 1px solid #26a69a; margin-bottom: 20px; cursor: pointer; }
+        /* CSS bổ sung để giao diện chuyên nghiệp hơn */
+        .query-section { margin-top: 30px; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .query-select { width: 100%; padding: 15px; border-radius: 12px; background: #164245; color: #26a69a; border: 1px solid #26a69a; margin-bottom: 20px; cursor: pointer; font-weight: bold; }
         .result-table { width: 100%; border-collapse: collapse; margin-top: 15px; color: white; }
-        .result-table th { border-bottom: 2px solid #26a69a; color: #26a69a; text-align: left; padding: 10px; }
-        .result-table td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .astro { width: 150px; } /* Căn chỉnh lại ảnh astronaut */
+        .result-table th { border-bottom: 2px solid #26a69a; color: #26a69a; text-align: left; padding: 12px; text-transform: uppercase; font-size: 0.85rem; }
+        .result-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .result-table tr:hover { background: rgba(38, 166, 154, 0.1); }
+        .astro { width: 150px; filter: drop-shadow(0 0 10px rgba(38, 166, 154, 0.5)); }
+        #resultTitle { color: #26a69a; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
     </style>
 </head>
 <body>
@@ -29,12 +31,69 @@
         <div class="hero-text">
             <h1>TIỆM VÀNG <span>2026</span></h1>
             <p>Hệ thống quản lý dữ liệu chuyên nghiệp (Nhóm 2)</p>
-            <button onclick="window.scrollTo(0, 500)">Bắt đầu truy vấn ↓</button>
+            <button onclick="document.getElementById('querySelector').focus()">Bắt đầu truy vấn ↓</button>
         </div>
         <img src="assets/astronaut.png" class="astro" alt="Astronaut">
     </section>
 
     <div class="menu">
-        <button onclick="goTo('products.html')">📦 Hàng hóa</button>
-        <button onclick="goTo('customers.html')">👥 Khách hàng</button>
-        <button onclick="goTo('invoices.html')">📄 Hóa đơn</button>
+        <button onclick="location.href='inventory.html'">📦 Kho Hàng</button>
+        <button onclick="location.href='customers.html'">👥 Khách hàng</button>
+        <button onclick="location.href='sales.html'">📄 Hóa đơn</button>
+    </div>
+
+    <section class="cards">
+        <div class="card">
+            <h3>Tổng hàng tồn</h3>
+            <p id="totalProducts">0</p>
+        </div>
+        <div class="card">
+            <h3>Tổng khách hàng</h3>
+            <p id="totalCustomers">0</p>
+        </div>
+        <div class="card">
+            <h3>Tổng hóa đơn</h3>
+            <p id="totalInvoices">0</p>
+        </div>
+    </section>
+
+    <section class="query-section">
+        <h3 style="margin-bottom: 20px;"><i class="bi bi-database-check"></i> Hệ Thống Truy Vấn Báo Cáo</h3>
+        
+        <select id="querySelector" class="query-select" onchange="handleQueryChange()">
+            <option value="">-- Chọn câu hỏi truy vấn (Mục 4.3) --</option>
+            <optgroup label="Truy vấn lọc & Sắp xếp">
+                <option value="4.3.1">4.3.1. Hàng hóa giá trên 15.000.000</option>
+                <option value="4.3.3">4.3.3. Các loại Nhẫn & Dây chuyền</option>
+                <option value="4.3.4">4.3.4. Top 5 hàng hóa giá thấp nhất</option>
+            </optgroup>
+            <optgroup label="Truy vấn Thống kê & Phân tích">
+                <option value="4.3.13">4.3.13. 4 hàng hóa bán chạy nhất</option>
+                <option value="4.3.14">4.3.14. Hóa đơn trị giá cao nhất</option>
+                <option value="4.3.15">4.3.15. Giao dịch của khách hàng KH04</option>
+                <option value="4.3.16">4.3.16. Khách hàng mua nhiều nhất</option>
+                <option value="4.3.17">4.3.17. Sản phẩm chưa từng phát sinh giao dịch</option>
+                <option value="4.3.18">4.3.18. Tổng doanh thu theo từng nhân viên</option>
+            </optgroup>
+        </select>
+
+        <div id="resultArea">
+            <h4 id="resultTitle">Sẵn sàng thực thi truy vấn...</h4>
+            <div style="overflow-x: auto;">
+                <table class="result-table">
+                    <thead id="thead"></thead>
+                    <tbody id="tbody">
+                        <tr><td colspan="5" style="text-align: center; opacity: 0.5;">Dữ liệu sẽ hiển thị tại đây sau khi bạn chọn truy vấn.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
