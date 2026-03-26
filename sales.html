@@ -13,15 +13,16 @@
             --card-bg: #164245;
             --accent-gold: #ffc107;
         }
-
-        body { background-color: var(--dark-teal); color: white; font-family: 'Segoe UI', sans-serif; }
-
+        body { 
+            background-color: var(--dark-teal); 
+            color: white; 
+            font-family: 'Segoe UI', sans-serif; 
+        }
         .sales-header { 
             background: linear-gradient(135deg, #164245 0%, #0d2b2d 100%); 
-            color: white; padding: 50px 0; 
+            color: white; padding: 50px 0;
             border-bottom: 1px solid rgba(255,255,255,0.1); 
         }
-
         .invoice-card { 
             background: rgba(255,255,255,0.05);
             border-radius: 20px;
@@ -33,22 +34,27 @@
             background: rgba(255,255,255,0.1); 
             transform: translateY(-3px); 
         }
-
         .filter-card {
             background: var(--card-bg);
             border-radius: 20px;
             border: 1px solid rgba(255,255,255,0.1);
         }
-
         .modal-content {
             background: var(--card-bg);
             color: white;
             border-radius: 25px;
             border: 1px solid var(--accent-gold);
         }
-
-        .navbar { margin: 20px; border-radius: 50px; background: rgba(22, 66, 69, 0.9) !important; padding: 10px 30px; }
+        .navbar { 
+            margin: 20px; 
+            border-radius: 50px; 
+            background: rgba(22, 66, 69, 0.9) !important; 
+            padding: 10px 30px; 
+        }
+        .table th { color: #ffc107; }
     </style>
+    <!-- ====================== DỮ LIỆU ====================== -->
+    <script src="data.js"></script>
 </head>
 <body>
 
@@ -72,8 +78,113 @@
 
     <div class="container mt-5">
         <div class="row g-4">
+            <!-- Phần lọc -->
             <div class="col-md-4">
                 <div class="card filter-card shadow-sm border-0 mb-4">
                     <div class="card-body p-4">
-                        <h6 class="fw-bold mb-3 text-warning"><i class="bi bi-search me-2"></i>Tra cứu khách hàng</h6>
-                        <input
+                        <h6 class="fw-bold mb-3 text-warning">
+                            <i class="bi bi-search me-2"></i>Tra cứu khách hàng
+                        </h6>
+                        <input 
+                            type="text" 
+                            id="searchCustomer" 
+                            class="form-control bg-dark text-white border-secondary" 
+                            placeholder="Tên khách hàng hoặc mã KH..." 
+                            onkeyup="if(event.key==='Enter') filterSales()">
+                        <button onclick="filterSales()" class="btn btn-warning w-100 mt-3">
+                            <i class="bi bi-search"></i> Tìm kiếm
+                        </button>
+                        <button onclick="resetSales()" class="btn btn-outline-light w-100 mt-2">
+                            <i class="bi bi-arrow-clockwise"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng hóa đơn -->
+            <div class="col-md-8">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover" id="salesTable">
+                        <thead>
+                            <tr>
+                                <th>Mã GD</th>
+                                <th>Ngày</th>
+                                <th>Nhân viên</th>
+                                <th>Khách hàng</th>
+                                <th>Hàng hóa</th>
+                                <th class="text-center">SL</th>
+                                <th class="text-end">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function renderSales(filteredData = HoaDonGiaoDich) {
+            const tbody = document.getElementById('salesBody');
+            let html = '';
+
+            filteredData.forEach(gd => {
+                const nv = NhanVien.find(n => n.MaNV === gd.MaNV) || { HoTen: 'N/A' };
+                const hh = HangHoa.find(h => h.MaHH === gd.MaHH) || { Ten: 'N/A' };
+
+                html += `
+                    <tr>
+                        <td><strong>${gd.MaGD}</strong></td>
+                        <td>${gd.ThoiGian}</td>
+                        <td>${nv.HoTen}</td>
+                        <td>${gd.TenKH}</td>
+                        <td>${hh.Ten}</td>
+                        <td class="text-center">${gd.SoLuong}</td>
+                        <td class="text-end text-warning fw-bold">
+                            ${gd.ThanhTienSauGiam.toLocaleString('vi-VN')} đ
+                        </td>
+                    </tr>`;
+            });
+
+            if (filteredData.length === 0) {
+                html = `<tr><td colspan="7" class="text-center py-5 text-muted">Không tìm thấy hóa đơn nào</td></tr>`;
+            }
+
+            tbody.innerHTML = html;
+        }
+
+        function filterSales() {
+            const keyword = document.getElementById('searchCustomer').value.toLowerCase().trim();
+
+            if (!keyword) {
+                renderSales(HoaDonGiaoDich);
+                return;
+            }
+
+            const filtered = HoaDonGiaoDich.filter(gd => 
+                gd.TenKH.toLowerCase().includes(keyword) || 
+                gd.MaKH.toLowerCase().includes(keyword)
+            );
+
+            renderSales(filtered);
+        }
+
+        function resetSales() {
+            document.getElementById('searchCustomer').value = '';
+            renderSales(HoaDonGiaoDich);
+        }
+
+        // Khởi tạo khi tải trang
+        window.onload = () => {
+            if (typeof HoaDonGiaoDich === 'undefined') {
+                console.error("❌ Không tìm thấy dữ liệu HoaDonGiaoDich từ data.js");
+                document.getElementById('salesBody').innerHTML = 
+                    `<tr><td colspan="7" class="text-danger text-center py-5">Lỗi: Chưa load được data.js</td></tr>`;
+                return;
+            }
+            renderSales();
+            console.log("%c✅ Nhật ký giao dịch đã tải thành công", "color:#ffc107;font-weight:bold");
+        };
+    </script>
+</body>
+</html>
