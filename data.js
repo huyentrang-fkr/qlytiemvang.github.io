@@ -70,3 +70,12 @@ const LuongNhanVien = [
     { MaLuong: 'L20260302', MaNV: 'NV02', SoNgayLam: 24, Thuong: 1000000, TongLuong: 14846153 },
     { MaLuong: 'L20260303', MaNV: 'NV03', SoNgayLam: 26, Thuong: 3000000, TongLuong: 11000000 }
 ];
+
+const ChiTietHoaDon = HoaDonGiaoDich.map(gd => ({
+    MaGD: gd.MaGD,
+    MaHH: gd.MaHH,
+    SoLuong: gd.SoLuong,
+    ThanhTienSauGiam: gd.ThanhTienSauGiam
+}));
+
+
