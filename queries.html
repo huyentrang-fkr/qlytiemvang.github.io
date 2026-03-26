@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Truy Vấn Hệ Thống - Tiệm Vàng 2026</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .query-list .list-group-item { cursor: pointer; transition: 0.2s; border-left: 4px solid transparent; }
+        .query-list .list-group-item:hover { background: #f8f9fa; border-left-color: #ffc107; }
+        .query-list .active { background: #fff3cd !important; color: #000; fw-bold; border-left-color: #ffc107; }
+        #queryTitle { color: #856404; border-bottom: 2px solid #ffeeba; pb-2; }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-dark shadow">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">💎 TRANG CHỦ</a>
+            <div class="navbar-nav flex-row">
+                <a class="nav-link me-3" href="inventory.html">Kho Hàng</a>
+                <a class="nav-link active" href="queries.html">Truy Vấn SQL</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white fw-bold">DANH SÁCH TRUY VẤN</div>
+                    <div class="list-group list-group-flush query-list" id="queryMenu">
+                        <button onclick="runQuery(431, this)" class="list-group-item list-group-item-action">4.3.1. Hàng hóa giá > 15.000.000</button>
+                        <button onclick="runQuery(433, this)" class="list-group-item list-group-item-action">4.3.3. Loại "Nhẫn" hoặc "Dây chuyền"</button>
+                        <button onclick="runQuery(434, this)" class="list-group-item list-group-item-action">4.3.4. 5 hàng hóa giá thấp nhất</button>
+                        <button onclick="runQuery(4313, this)" class="list-group-item list-group-item-action">4.3.13. 4 hàng hóa mua nhiều nhất</button>
+                        <button onclick="runQuery(4317, this)" class="list-group-item list-group-item-action">4.3.17. Hàng hóa chưa từng được mua</button>
+                        <button onclick="runQuery(4318, this)" class="list-group-item list-group-item-action">4.3.18. Doanh thu theo nhân viên</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0 p-4">
+                    <h5 id="queryTitle">Chọn một truy vấn để xem kết quả</h5>
+                    <div class="table-responsive mt-3">
+                        <table class="table table-hover" id="queryResultTable">
+                            <thead class="table-light" id="queryHeader"></thead>
+                            <tbody id="queryBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
