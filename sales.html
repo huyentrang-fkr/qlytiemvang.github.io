@@ -24,54 +24,71 @@
             border-bottom: 1px solid rgba(255,255,255,0.1); 
         }
 
-        /* Bộ lọc hiện đại */
+        /* Filter Panel */
         .filter-panel {
-            background: rgba(22, 66, 69, 0.7);
+            background: rgba(22, 66, 69, 0.85);
             backdrop-filter: blur(12px);
             border-radius: 20px;
-            border: 1px solid rgba(255,193,7,0.15);
+            border: 1px solid rgba(255,193,7,0.2);
             padding: 24px;
+            height: fit-content;
         }
 
+        /* Bảng lớn hơn, tối màu */
         .sales-table-container {
-            background: rgba(22, 66, 69, 0.6);
+            background: rgba(22, 66, 69, 0.85);     /* Đậm hơn nền một chút */
             backdrop-filter: blur(12px);
             border-radius: 24px;
-            border: 1px solid rgba(255, 193, 7, 0.15);
+            border: 1px solid rgba(255, 193, 7, 0.2);
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        #salesTable {
+            margin-bottom: 0;
         }
 
         #salesTable thead th {
-            background: rgba(255, 193, 7, 0.15);
+            background: rgba(255, 193, 7, 0.12);
             color: var(--accent-gold);
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.85rem;
-            padding: 18px 12px;
+            font-size: 0.87rem;
+            padding: 20px 12px;
+            border-bottom: 2px solid rgba(255,193,7,0.3);
         }
 
         #salesTable tbody td {
-            padding: 16px 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 18px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            color: #e0e0e0;                    /* Màu sáng hơn nền một chút */
         }
 
         #salesTable tbody tr:hover {
-            background: rgba(255, 193, 7, 0.08);
-            transform: scale(1.01);
+            background: rgba(255, 193, 7, 0.09);
             transition: all 0.3s ease;
         }
 
         #salesTable td.text-end {
             color: #ffc107;
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 1.08rem;
+        }
+
+        #salesTable td strong {
+            color: #4db6ac;
+            font-family: monospace;
         }
 
         .form-select, .form-control {
-            background-color: #0d2b2d;
+            background-color: #0f2a2c;
             color: white;
             border: 1px solid #26a69a;
+        }
+
+        .form-select:focus, .form-control:focus {
+            border-color: #ffc107;
+            box-shadow: 0 0 0 0.2rem rgba(255,193,7,0.25);
         }
     </style>
     <script src="data.js"></script>
@@ -99,23 +116,21 @@
     <div class="container mt-5">
         <div class="row g-4">
             <!-- Phần lọc -->
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <div class="filter-panel">
                     <h5 class="fw-bold mb-4 text-warning">
-                        <i class="bi bi-funnel-fill me-2"></i>Lọc Hóa Đơn
+                        <i class="bi bi-funnel-fill me-2"></i>LỌC HÓA ĐƠN
                     </h5>
 
-                    <!-- Lọc theo năm -->
                     <div class="mb-3">
                         <label class="form-label text-light">Chọn Năm</label>
                         <select id="yearFilter" class="form-select" onchange="filterSales()">
                             <option value="all">Tất cả các năm</option>
                             <option value="2025">Năm 2025</option>
-                            <option value="2026">Năm 2026</option>
+                            <option value="2026" selected>Năm 2026</option>
                         </select>
                     </div>
 
-                    <!-- Tra cứu khách hàng -->
                     <div class="mb-3">
                         <label class="form-label text-light">Tra cứu khách hàng</label>
                         <input type="text" id="searchCustomer" 
@@ -125,30 +140,30 @@
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button onclick="filterSales()" class="btn btn-warning">
+                        <button onclick="filterSales()" class="btn btn-warning py-2">
                             <i class="bi bi-search"></i> Tìm kiếm
                         </button>
-                        <button onclick="resetSales()" class="btn btn-outline-light">
+                        <button onclick="resetSales()" class="btn btn-outline-light py-2">
                             <i class="bi bi-arrow-clockwise"></i> Reset tất cả
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Bảng hóa đơn -->
-            <div class="col-md-8">
-                <div class="sales-table-container p-3">
+            <!-- Bảng hóa đơn to hơn -->
+            <div class="col-lg-8">
+                <div class="sales-table-container">
                     <div class="table-responsive">
                         <table class="table table-hover" id="salesTable">
                             <thead>
                                 <tr>
-                                    <th>Mã GD</th>
-                                    <th>Ngày</th>
-                                    <th>Nhân viên</th>
-                                    <th>Khách hàng</th>
-                                    <th>Hàng hóa</th>
+                                    <th>MÃ GD</th>
+                                    <th>NGÀY</th>
+                                    <th>NHÂN VIÊN</th>
+                                    <th>KHÁCH HÀNG</th>
+                                    <th>HÀNG HÓA</th>
                                     <th class="text-center">SL</th>
-                                    <th class="text-end">Thành tiền</th>
+                                    <th class="text-end">THÀNH TIỀN</th>
                                 </tr>
                             </thead>
                             <tbody id="salesBody"></tbody>
@@ -181,7 +196,7 @@
             });
 
             if (filteredData.length === 0) {
-                html = `<tr><td colspan="7" class="text-center py-5 text-muted">Không tìm thấy hóa đơn nào</td></tr>`;
+                html = `<tr><td colspan="7" class="text-center py-5 text-muted">Không tìm thấy hóa đơn nào phù hợp</td></tr>`;
             }
 
             tbody.innerHTML = html;
@@ -193,12 +208,10 @@
 
             let filtered = HoaDonGiaoDich;
 
-            // Lọc theo năm
             if (year !== 'all') {
                 filtered = filtered.filter(gd => gd.ThoiGian.startsWith(year));
             }
 
-            // Lọc theo tên hoặc mã khách hàng
             if (keyword) {
                 filtered = filtered.filter(gd => 
                     gd.TenKH.toLowerCase().includes(keyword) || 
@@ -215,15 +228,13 @@
             renderSales(HoaDonGiaoDich);
         }
 
-        // Khởi tạo trang
         window.onload = () => {
             if (typeof HoaDonGiaoDich === 'undefined') {
                 document.getElementById('salesBody').innerHTML = 
-                    `<tr><td colspan="7" class="text-danger text-center py-5">Lỗi: Không load được dữ liệu</td></tr>`;
+                    `<tr><td colspan="7" class="text-danger text-center py-5">Lỗi: Không load được dữ liệu từ data.js</td></tr>`;
                 return;
             }
             renderSales();
-            console.log("%c✅ Nhật ký giao dịch đã tải thành công với bộ lọc năm", "color:#ffc107;font-weight:bold");
         };
     </script>
 </body>
