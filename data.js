@@ -78,25 +78,25 @@ const HangHoa = [
 
 // 6. Hóa Đơn Chi Tiết (Ket hop HoaDonGiaoDich + ChiTietHoaDon)
 const HoaDonGiaoDich = [
-    { MaGD: 'GD2501', ThoiGian: '2025-02-14 10:00:00', MaNV: 'NV02', MaKH: 'KH01', TenKH: 'Đỗ Quang Anh' },
-    { MaGD: 'GD2502', ThoiGian: '2025-02-14 15:30:00', MaNV: 'NV03', MaKH: 'KH04', TenKH: 'Vũ Lâm Bách' },
-    { MaGD: 'GD2503', ThoiGian: '2025-03-10 09:15:00', MaNV: 'NV01', MaKH: 'KH10', TenKH: 'Hoàng Thị Ngọc' },
-    { MaGD: 'GD2504', ThoiGian: '2025-03-10 14:00:00', MaNV: 'NV02', MaKH: 'KH07', TenKH: 'Lê Văn Hoàng' },
-    { MaGD: 'GD2505', ThoiGian: '2025-06-20 11:20:00', MaNV: 'NV03', MaKH: 'KH02', TenKH: 'Ngô Bùi Thế Anh' },
-    { MaGD: 'GD2506', ThoiGian: '2025-08-15 16:45:00', MaNV: 'NV01', MaKH: 'KH09', TenKH: 'Phạm Minh Tuấn' },
-    { MaGD: 'GD2507', ThoiGian: '2025-10-20 09:00:00', MaNV: 'NV02', MaKH: 'KH05', TenKH: 'Phạm Thị Khánh Huyền' },
-    { MaGD: 'GD2508', ThoiGian: '2025-12-24 19:30:00', MaNV: 'NV03', MaKH: 'KH15', TenKH: 'Đặng Quốc Bảo' },
-    { MaGD: 'GD2509', ThoiGian: '2025-12-31 10:00:00', MaNV: 'NV01', MaKH: 'KH13', TenKH: 'Lê Minh Đức' },
-    { MaGD: 'GD2601', ThoiGian: '2026-01-15 08:30:00', MaNV: 'NV02', MaKH: 'KH03', TenKH: 'Trần Đức Anh' },
-    { MaGD: 'GD2602', ThoiGian: '2026-02-05 11:00:00', MaNV: 'NV03', MaKH: 'KH08', TenKH: 'Trần Thị Lan' },
-    { MaGD: 'GD2603', ThoiGian: '2026-02-14 14:20:00', MaNV: 'NV01', MaKH: 'KH12', TenKH: 'Nguyễn Thị Hạnh' },
-    { MaGD: 'GD2604', ThoiGian: '2026-02-27 10:15:00', MaNV: 'NV02', MaKH: 'KH06', TenKH: 'Nguyễn Thị Mai' },
-    { MaGD: 'GD2605', ThoiGian: '2026-02-27 16:00:00', MaNV: 'NV03', MaKH: 'KH14', TenKH: 'Phan Thị Thu' },
-    { MaGD: 'GD2606', ThoiGian: '2026-03-08 09:45:00', MaNV: 'NV01', MaKH: 'KH11', TenKH: 'Bùi Văn Nam' },
-    { MaGD: 'GD2607', ThoiGian: '2026-03-15 13:10:00', MaNV: 'NV02', MaKH: 'KH01', TenKH: 'Đỗ Quang Anh' },
-    { MaGD: 'GD2608', ThoiGian: '2026-03-24 08:30:00', MaNV: 'NV03', MaKH: 'KH04', TenKH: 'Vũ Lâm Bách' },
-    { MaGD: 'GD2609', ThoiGian: '2026-03-25 11:30:00', MaNV: 'NV01', MaKH: 'KH15', TenKH: 'Đặng Quốc Bảo' },
-    { MaGD: 'GD2610', ThoiGian: '2026-03-26 15:50:00', MaNV: 'NV02', MaKH: 'KH10', TenKH: 'Hoàng Thị Ngọc' }
+    { MaGD: 'GD2501', ThoiGian: '2025-02-14 10:00:00', MaNV: 'NV02', MaKH: 'KH01', TenKH: 'Đỗ Quang Anh', MaHH: 'HH03', SoLuong: 3, ThanhTienSauGiam: 558000000 },
+    { MaGD: 'GD2502', ThoiGian: '2025-02-14 15:30:00', MaNV: 'NV03', MaKH: 'KH04', TenKH: 'Vũ Lâm Bách', MaHH: 'HH04', SoLuong: 2, ThanhTienSauGiam: 186000000 },
+    { MaGD: 'GD2503', ThoiGian: '2025-03-10 09:15:00', MaNV: 'NV01', MaKH: 'KH10', TenKH: 'Hoàng Thị Ngọc', MaHH: 'HH05', SoLuong: 1, ThanhTienSauGiam: 639000000 },
+    { MaGD: 'GD2504', ThoiGian: '2025-03-10 14:00:00', MaNV: 'NV02', MaKH: 'KH07', TenKH: 'Lê Văn Hoàng', MaHH: 'HH06', SoLuong: 1, ThanhTienSauGiam: 1164400000 },
+    { MaGD: 'GD2505', ThoiGian: '2025-06-20 11:20:00', MaNV: 'NV03', MaKH: 'KH02', TenKH: 'Ngô Bùi Thế Anh', MaHH: 'HH07', SoLuong: 2, ThanhTienSauGiam: 894600000 },
+    { MaGD: 'GD2506', ThoiGian: '2025-08-15 16:45:00', MaNV: 'NV01', MaKH: 'KH09', TenKH: 'Phạm Minh Tuấn', MaHH: 'HH08', SoLuong: 5, ThanhTienSauGiam: 426000000 },
+    { MaGD: 'GD2507', ThoiGian: '2025-10-20 09:00:00', MaNV: 'NV02', MaKH: 'KH05', TenKH: 'Phạm Thị Khánh Huyền', MaHH: 'HH19', SoLuong: 10, ThanhTienSauGiam: 80000000 },
+    { MaGD: 'GD2508', ThoiGian: '2025-12-24 19:30:00', MaNV: 'NV03', MaKH: 'KH15', TenKH: 'Đặng Quốc Bảo', MaHH: 'HH20', SoLuong: 8, ThanhTienSauGiam: 42000000 },
+    { MaGD: 'GD2509', ThoiGian: '2025-12-31 10:00:00', MaNV: 'NV01', MaKH: 'KH13', TenKH: 'Lê Minh Đức', MaHH: 'HH21', SoLuong: 15, ThanhTienSauGiam: 28125000 },
+    { MaGD: 'GD2601', ThoiGian: '2026-01-15 08:30:00', MaNV: 'NV02', MaKH: 'KH03', TenKH: 'Trần Đức Anh', MaHH: 'HH03', SoLuong: 4, ThanhTienSauGiam: 744000000 },
+    { MaGD: 'GD2602', ThoiGian: '2026-02-05 11:00:00', MaNV: 'NV03', MaKH: 'KH08', TenKH: 'Trần Thị Lan', MaHH: 'HH09', SoLuong: 3, ThanhTienSauGiam: 468600000 },
+    { MaGD: 'GD2603', ThoiGian: '2026-02-14 14:20:00', MaNV: 'NV01', MaKH: 'KH12', TenKH: 'Nguyễn Thị Hạnh', MaHH: 'HH10', SoLuong: 1, ThanhTienSauGiam: 176875000 },
+    { MaGD: 'GD2604', ThoiGian: '2026-02-27 10:15:00', MaNV: 'NV02', MaKH: 'KH06', TenKH: 'Nguyễn Thị Mai', MaHH: 'HH06', SoLuong: 1, ThanhTienSauGiam: 1164400000 },
+    { MaGD: 'GD2605', ThoiGian: '2026-02-27 16:00:00', MaNV: 'NV03', MaKH: 'KH14', TenKH: 'Phan Thị Thu', MaHH: 'HH07', SoLuong: 1, ThanhTienSauGiam: 447300000 },
+    { MaGD: 'GD2606', ThoiGian: '2026-03-08 09:45:00', MaNV: 'NV01', MaKH: 'KH11', TenKH: 'Bùi Văn Nam', MaHH: 'HH08', SoLuong: 4, ThanhTienSauGiam: 340800000 },
+    { MaGD: 'GD2607', ThoiGian: '2026-03-15 13:10:00', MaNV: 'NV02', MaKH: 'KH01', TenKH: 'Đỗ Quang Anh', MaHH: 'HH22', SoLuong: 1, ThanhTienSauGiam: 31200000 },
+    { MaGD: 'GD2608', ThoiGian: '2026-03-24 08:30:00', MaNV: 'NV03', MaKH: 'KH04', TenKH: 'Vũ Lâm Bách', MaHH: 'HH01', SoLuong: 1, ThanhTienSauGiam: 1860000000 },
+    { MaGD: 'GD2609', ThoiGian: '2026-03-25 11:30:00', MaNV: 'NV01', MaKH: 'KH15', TenKH: 'Đặng Quốc Bảo', MaHH: 'HH05', SoLuong: 1, ThanhTienSauGiam: 639000000 },
+    { MaGD: 'GD2610', ThoiGian: '2026-03-26 15:50:00', MaNV: 'NV02', MaKH: 'KH10', TenKH: 'Hoàng Thị Ngọc', MaHH: 'HH06', SoLuong: 1, ThanhTienSauGiam: 1164400000 }
 ];
 
 // 7. Lương Nhân Viên (LuongNhanVien)
