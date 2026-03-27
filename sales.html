@@ -10,50 +10,14 @@
     <style>
         :root {
             --dark-teal: #0d2b2d;
-            --card-bg: #164245;
             --accent-gold: #ffc107;
         }
-        body { 
-            background-color: var(--dark-teal); 
-            color: white; 
-            font-family: 'Segoe UI', sans-serif; 
-        }
-        .sales-header { 
-            background: linear-gradient(135deg, #164245 0%, #0d2b2d 100%); 
-            color: white; padding: 50px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1); 
-        }
-        .invoice-card { 
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            transition: all 0.3s; 
-            cursor: pointer; 
-            border-left: 5px solid var(--accent-gold) !important; 
-        }
-        .invoice-card:hover { 
-            background: rgba(255,255,255,0.1); 
-            transform: translateY(-3px); 
-        }
-        .filter-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .modal-content {
-            background: var(--card-bg);
-            color: white;
-            border-radius: 25px;
-            border: 1px solid var(--accent-gold);
-        }
-        .navbar { 
-            margin: 20px; 
-            border-radius: 50px; 
-            background: rgba(22, 66, 69, 0.9) !important; 
-            padding: 10px 30px; 
-        }
-        .table th { color: #ffc107; }
+        body { background-color: var(--dark-teal); color: white; font-family: 'Segoe UI', sans-serif; }
+        .sales-header { background: linear-gradient(135deg, #164245 0%, #0d2b2d 100%); padding: 60px 0; }
+        .filter-panel { background: #164245; border-radius: 20px; padding: 25px; }
+        .table th { background: #1e3a3c; color: #ffc107; }
+        .table td { vertical-align: middle; }
     </style>
-    <!-- ====================== DỮ LIỆU ====================== -->
     <script src="data.js"></script>
 </head>
 <body>
@@ -69,39 +33,33 @@
         </div>
     </nav>
 
-    <header class="sales-header text-center shadow-sm">
+    <header class="sales-header text-center">
         <div class="container">
-            <h1 class="fw-bold display-5">NHẬT KÝ GIAO DỊCH</h1>
-            <p class="opacity-75">Quản lý doanh thu và lịch sử mua bán chi tiết</p>
+            <h1 class="display-4 fw-bold">NHẬT KÝ GIAO DỊCH</h1>
+            <p class="lead opacity-75">Quản lý doanh thu và lịch sử mua bán chi tiết</p>
         </div>
     </header>
 
     <div class="container mt-5">
         <div class="row g-4">
-            <!-- Phần lọc -->
+
+            <!-- PHẦN TRA CỨU KHÁCH HÀNG -->
             <div class="col-md-4">
-                <div class="card filter-card shadow-sm border-0 mb-4">
-                    <div class="card-body p-4">
-                        <h6 class="fw-bold mb-3 text-warning">
-                            <i class="bi bi-search me-2"></i>Tra cứu khách hàng
-                        </h6>
-                        <input 
-                            type="text" 
-                            id="searchCustomer" 
-                            class="form-control bg-dark text-white border-secondary" 
-                            placeholder="Tên khách hàng hoặc mã KH..." 
-                            onkeyup="if(event.key==='Enter') filterSales()">
-                        <button onclick="filterSales()" class="btn btn-warning w-100 mt-3">
-                            <i class="bi bi-search"></i> Tìm kiếm
-                        </button>
-                        <button onclick="resetSales()" class="btn btn-outline-light w-100 mt-2">
-                            <i class="bi bi-arrow-clockwise"></i> Reset
-                        </button>
-                    </div>
+                <div class="filter-panel">
+                    <h5 class="text-warning mb-3"><i class="bi bi-search"></i> Tra cứu khách hàng</h5>
+                    <input type="text" id="searchCustomer" class="form-control bg-dark text-white border-0 mb-3" 
+                           placeholder="Tên khách hàng hoặc mã KH..." onkeyup="if(event.key==='Enter') filterSales()">
+                    
+                    <button onclick="filterSales()" class="btn btn-warning w-100 mb-2">
+                        <i class="bi bi-search"></i> Tìm kiếm
+                    </button>
+                    <button onclick="resetSales()" class="btn btn-outline-light w-100">
+                        <i class="bi bi-arrow-clockwise"></i> Reset
+                    </button>
                 </div>
             </div>
 
-            <!-- Bảng hóa đơn -->
+            <!-- BẢNG HÓA ĐƠN -->
             <div class="col-md-8">
                 <div class="table-responsive">
                     <table class="table table-dark table-hover" id="salesTable">
@@ -140,7 +98,7 @@
                         <td>${gd.TenKH}</td>
                         <td>${hh.Ten}</td>
                         <td class="text-center">${gd.SoLuong}</td>
-                        <td class="text-end text-warning fw-bold">
+                        <td class="text-end fw-bold text-warning">
                             ${gd.ThanhTienSauGiam.toLocaleString('vi-VN')} đ
                         </td>
                     </tr>`;
@@ -161,9 +119,10 @@
                 return;
             }
 
-            const filtered = HoaDonGiaoDich.filter(gd => 
-                gd.TenKH.toLowerCase().includes(keyword) || 
-                gd.MaKH.toLowerCase().includes(keyword)
+            const filtered = HoaDonGiaoDich.filter(gd =>
+                gd.TenKH.toLowerCase().includes(keyword) ||
+                gd.MaKH.toLowerCase().includes(keyword) ||
+                gd.MaGD.toLowerCase().includes(keyword)
             );
 
             renderSales(filtered);
@@ -174,16 +133,15 @@
             renderSales(HoaDonGiaoDich);
         }
 
-        // Khởi tạo khi tải trang
+        // Khởi tạo trang
         window.onload = () => {
-            if (typeof HoaDonGiaoDich === 'undefined') {
-                console.error("❌ Không tìm thấy dữ liệu HoaDonGiaoDich từ data.js");
+            if (typeof HoaDonGiaoDich === 'undefined' || HoaDonGiaoDich.length === 0) {
                 document.getElementById('salesBody').innerHTML = 
-                    `<tr><td colspan="7" class="text-danger text-center py-5">Lỗi: Chưa load được data.js</td></tr>`;
+                    `<tr><td colspan="7" class="text-danger text-center py-5">Lỗi: Chưa load được dữ liệu từ data.js</td></tr>`;
                 return;
             }
             renderSales();
-            console.log("%c✅ Nhật ký giao dịch đã tải thành công", "color:#ffc107;font-weight:bold");
+            console.log("%c✅ Nhật ký giao dịch đã tải thành công - 19 hóa đơn", "color:#ffc107;font-weight:bold");
         };
     </script>
 </body>
