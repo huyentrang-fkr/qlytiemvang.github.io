@@ -17,6 +17,7 @@
         .filter-panel { background: #164245; border-radius: 20px; padding: 25px; }
         .table th { background: #1e3a3c; color: #ffc107; }
         .table td { vertical-align: middle; }
+        .total-row { background: rgba(255,193,7,0.1); font-weight: bold; }
     </style>
     <script src="data.js"></script>
 </head>
@@ -43,7 +44,7 @@
     <div class="container mt-5">
         <div class="row g-4">
 
-            <!-- PHẦN TRA CỨU KHÁCH HÀNG -->
+            <!-- Tra cứu khách hàng -->
             <div class="col-md-4">
                 <div class="filter-panel">
                     <h5 class="text-warning mb-3"><i class="bi bi-search"></i> Tra cứu khách hàng</h5>
@@ -59,7 +60,7 @@
                 </div>
             </div>
 
-            <!-- BẢNG HÓA ĐƠN -->
+            <!-- Bảng hóa đơn -->
             <div class="col-md-8">
                 <div class="table-responsive">
                     <table class="table table-dark table-hover" id="salesTable">
@@ -71,7 +72,7 @@
                                 <th>Khách hàng</th>
                                 <th>Hàng hóa</th>
                                 <th class="text-center">SL</th>
-                                <th class="text-end">Thành tiền</th>
+                                <th class="text-end">Tổng tiền</th>
                             </tr>
                         </thead>
                         <tbody id="salesBody"></tbody>
@@ -82,67 +83,28 @@
     </div>
 
     <script>
+        // Hàm tính tổng tiền từ ChiTietHoaDon cho từng hóa đơn
+        function getTotalByGD(maGD) {
+            return ChiTietHoaDon
+                .filter(ct => ct.MaGD === maGD)
+                .reduce((sum, ct) => sum + ct.ThanhTienSauGiam, 0);
+        }
+
         function renderSales(filteredData = HoaDonGiaoDich) {
             const tbody = document.getElementById('salesBody');
             let html = '';
 
             filteredData.forEach(gd => {
                 const nv = NhanVien.find(n => n.MaNV === gd.MaNV) || { HoTen: 'N/A' };
-                const hh = HangHoa.find(h => h.MaHH === gd.MaHH) || { Ten: 'N/A' };
+                const total = getTotalByGD(gd.MaGD);
+
+                // Lấy tên hàng hóa (nếu nhiều mặt hàng thì hiển thị "Nhiều mặt hàng")
+                const items = ChiTietHoaDon.filter(ct => ct.MaGD === gd.MaGD);
+                let tenHang = items.length > 1 
+                    ? `Nhiều mặt hàng (${items.length})` 
+                    : (HangHoa.find(h => h.MaHH === items[0]?.MaHH)?.Ten || 'N/A');
 
                 html += `
                     <tr>
                         <td><strong>${gd.MaGD}</strong></td>
-                        <td>${gd.ThoiGian}</td>
-                        <td>${nv.HoTen}</td>
-                        <td>${gd.TenKH}</td>
-                        <td>${hh.Ten}</td>
-                        <td class="text-center">${gd.SoLuong}</td>
-                        <td class="text-end fw-bold text-warning">
-                            ${gd.ThanhTienSauGiam.toLocaleString('vi-VN')} đ
-                        </td>
-                    </tr>`;
-            });
-
-            if (filteredData.length === 0) {
-                html = `<tr><td colspan="7" class="text-center py-5 text-muted">Không tìm thấy hóa đơn nào</td></tr>`;
-            }
-
-            tbody.innerHTML = html;
-        }
-
-        function filterSales() {
-            const keyword = document.getElementById('searchCustomer').value.toLowerCase().trim();
-
-            if (!keyword) {
-                renderSales(HoaDonGiaoDich);
-                return;
-            }
-
-            const filtered = HoaDonGiaoDich.filter(gd =>
-                gd.TenKH.toLowerCase().includes(keyword) ||
-                gd.MaKH.toLowerCase().includes(keyword) ||
-                gd.MaGD.toLowerCase().includes(keyword)
-            );
-
-            renderSales(filtered);
-        }
-
-        function resetSales() {
-            document.getElementById('searchCustomer').value = '';
-            renderSales(HoaDonGiaoDich);
-        }
-
-        // Khởi tạo trang
-        window.onload = () => {
-            if (typeof HoaDonGiaoDich === 'undefined' || HoaDonGiaoDich.length === 0) {
-                document.getElementById('salesBody').innerHTML = 
-                    `<tr><td colspan="7" class="text-danger text-center py-5">Lỗi: Chưa load được dữ liệu từ data.js</td></tr>`;
-                return;
-            }
-            renderSales();
-            console.log("%c✅ Nhật ký giao dịch đã tải thành công - 19 hóa đơn", "color:#ffc107;font-weight:bold");
-        };
-    </script>
-</body>
-</html>
+                       
