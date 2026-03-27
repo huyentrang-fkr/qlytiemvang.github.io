@@ -37,72 +37,15 @@ const KhachHang = [
 
 // 4. Bảng Giá Thị Trường (BangGiaThiTruong)
 const BangGiaThiTruong = {
-    'V9999': { 
-        Ten: 'Vàng 24K (9999)', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 183000000, 
-        Ban: 186000000 
-    },
-    'V999': { 
-        Ten: 'Vàng 999', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 182000000, 
-        Ban: 185000000 
-    },
-    'V750': { 
-        Ten: 'Vàng 18K (750)', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 137000000, 
-        Ban: 142000000 
-    },
-    'V583': { 
-        Ten: 'Vàng 14K (583)', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 105000000, 
-        Ban: 110000000 
-    },
-    'V417': { 
-        Ten: 'Vàng 10K (417)', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 75000000, 
-        Ban: 80000000 
-    },
-    'V750W': { 
-        Ten: 'Vàng Trắng 18K', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 136500000, 
-        Ban: 141500000 
-    },
-    'V750R': { 
-        Ten: 'Vàng Hồng 18K', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 136000000, 
-        Ban: 141000000 
-    },
-    'V750I': { 
-        Ten: 'Vàng Ý 750', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 135000000, 
-        Ban: 140000000 
-    },
-    'B999': { 
-        Ten: 'Bạc Nguyên Chất', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 3000000, 
-        Ban: 3200000 
-    },
-    'B925': { 
-        Ten: 'Bạc 925', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 2200000, 
-        Ban: 2500000 
-    },
-    'B925T': { 
-        Ten: 'Bạc Thái', 
-        NgayCapNhat: '2026-03-24', 
-        Mua: 2300000, 
-        Ban: 2600000 
-    }
+    'V9999': { Ten: 'Vàng 24K (9999)', Mua: 183000000, Ban: 186000000 },
+    'V999':  { Ten: 'Vàng 999', Mua: 182000000, Ban: 185000000 },
+    'V750':  { Ten: 'Vàng 18K (750)', Mua: 137000000, Ban: 142000000 },
+    'V750W': { Ten: 'Vàng Trắng 18K', Mua: 136500000, Ban: 141500000 },
+    'V750R': { Ten: 'Vàng Hồng 18K', Mua: 136000000, Ban: 141000000 },
+    'V750I': { Ten: 'Vàng Ý 750', Mua: 135000000, Ban: 140000000 },
+    'B999':  { Ten: 'Bạc Nguyên Chất', Mua: 3000000, Ban: 3200000 },
+    'B925':  { Ten: 'Bạc 925', Mua: 2200000, Ban: 2500000 },
+    'B925T': { Ten: 'Bạc Thái', Mua: 2300000, Ban: 2600000 }
 };
 // 5. Danh Sách Hàng Hóa (HangHoa)
 const HangHoa = [
