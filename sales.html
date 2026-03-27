@@ -23,37 +23,57 @@
             color: white; padding: 50px 0;
             border-bottom: 1px solid rgba(255,255,255,0.1); 
         }
-        .invoice-card { 
-            background: rgba(255,255,255,0.05);
+
+        /* Bộ lọc hiện đại */
+        .filter-panel {
+            background: rgba(22, 66, 69, 0.7);
+            backdrop-filter: blur(12px);
             border-radius: 20px;
-            transition: all 0.3s; 
-            cursor: pointer; 
-            border-left: 5px solid var(--accent-gold) !important; 
+            border: 1px solid rgba(255,193,7,0.15);
+            padding: 24px;
         }
-        .invoice-card:hover { 
-            background: rgba(255,255,255,0.1); 
-            transform: translateY(-3px); 
+
+        .sales-table-container {
+            background: rgba(22, 66, 69, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 193, 7, 0.15);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
-        .filter-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
+
+        #salesTable thead th {
+            background: rgba(255, 193, 7, 0.15);
+            color: var(--accent-gold);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            padding: 18px 12px;
         }
-        .modal-content {
-            background: var(--card-bg);
+
+        #salesTable tbody td {
+            padding: 16px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        #salesTable tbody tr:hover {
+            background: rgba(255, 193, 7, 0.08);
+            transform: scale(1.01);
+            transition: all 0.3s ease;
+        }
+
+        #salesTable td.text-end {
+            color: #ffc107;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .form-select, .form-control {
+            background-color: #0d2b2d;
             color: white;
-            border-radius: 25px;
-            border: 1px solid var(--accent-gold);
+            border: 1px solid #26a69a;
         }
-        .navbar { 
-            margin: 20px; 
-            border-radius: 50px; 
-            background: rgba(22, 66, 69, 0.9) !important; 
-            padding: 10px 30px; 
-        }
-        .table th { color: #ffc107; }
     </style>
-    <!-- ====================== DỮ LIỆU ====================== -->
     <script src="data.js"></script>
 </head>
 <body>
@@ -69,10 +89,10 @@
         </div>
     </nav>
 
-    <header class="sales-header text-center shadow-sm">
+    <header class="sales-header text-center">
         <div class="container">
             <h1 class="fw-bold display-5">NHẬT KÝ GIAO DỊCH</h1>
-            <p class="opacity-75">Quản lý doanh thu và lịch sử mua bán chi tiết</p>
+            <p class="opacity-75">Quản lý doanh thu và lịch sử mua bán</p>
         </div>
     </header>
 
@@ -80,22 +100,36 @@
         <div class="row g-4">
             <!-- Phần lọc -->
             <div class="col-md-4">
-                <div class="card filter-card shadow-sm border-0 mb-4">
-                    <div class="card-body p-4">
-                        <h6 class="fw-bold mb-3 text-warning">
-                            <i class="bi bi-search me-2"></i>Tra cứu khách hàng
-                        </h6>
-                        <input 
-                            type="text" 
-                            id="searchCustomer" 
-                            class="form-control bg-dark text-white border-secondary" 
-                            placeholder="Tên khách hàng hoặc mã KH..." 
-                            onkeyup="if(event.key==='Enter') filterSales()">
-                        <button onclick="filterSales()" class="btn btn-warning w-100 mt-3">
+                <div class="filter-panel">
+                    <h5 class="fw-bold mb-4 text-warning">
+                        <i class="bi bi-funnel-fill me-2"></i>Lọc Hóa Đơn
+                    </h5>
+
+                    <!-- Lọc theo năm -->
+                    <div class="mb-3">
+                        <label class="form-label text-light">Chọn Năm</label>
+                        <select id="yearFilter" class="form-select" onchange="filterSales()">
+                            <option value="all">Tất cả các năm</option>
+                            <option value="2025">Năm 2025</option>
+                            <option value="2026">Năm 2026</option>
+                        </select>
+                    </div>
+
+                    <!-- Tra cứu khách hàng -->
+                    <div class="mb-3">
+                        <label class="form-label text-light">Tra cứu khách hàng</label>
+                        <input type="text" id="searchCustomer" 
+                               class="form-control" 
+                               placeholder="Tên hoặc mã khách hàng..." 
+                               onkeyup="if(event.key==='Enter') filterSales()">
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button onclick="filterSales()" class="btn btn-warning">
                             <i class="bi bi-search"></i> Tìm kiếm
                         </button>
-                        <button onclick="resetSales()" class="btn btn-outline-light w-100 mt-2">
-                            <i class="bi bi-arrow-clockwise"></i> Reset
+                        <button onclick="resetSales()" class="btn btn-outline-light">
+                            <i class="bi bi-arrow-clockwise"></i> Reset tất cả
                         </button>
                     </div>
                 </div>
@@ -103,21 +137,23 @@
 
             <!-- Bảng hóa đơn -->
             <div class="col-md-8">
-                <div class="table-responsive">
-                    <table class="table table-dark table-hover" id="salesTable">
-                        <thead>
-                            <tr>
-                                <th>Mã GD</th>
-                                <th>Ngày</th>
-                                <th>Nhân viên</th>
-                                <th>Khách hàng</th>
-                                <th>Hàng hóa</th>
-                                <th class="text-center">SL</th>
-                                <th class="text-end">Thành tiền</th>
-                            </tr>
-                        </thead>
-                        <tbody id="salesBody"></tbody>
-                    </table>
+                <div class="sales-table-container p-3">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="salesTable">
+                            <thead>
+                                <tr>
+                                    <th>Mã GD</th>
+                                    <th>Ngày</th>
+                                    <th>Nhân viên</th>
+                                    <th>Khách hàng</th>
+                                    <th>Hàng hóa</th>
+                                    <th class="text-center">SL</th>
+                                    <th class="text-end">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesBody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -140,9 +176,7 @@
                         <td>${gd.TenKH}</td>
                         <td>${hh.Ten}</td>
                         <td class="text-center">${gd.SoLuong}</td>
-                        <td class="text-end text-warning fw-bold">
-                            ${gd.ThanhTienSauGiam.toLocaleString('vi-VN')} đ
-                        </td>
+                        <td class="text-end fw-bold">${gd.ThanhTienSauGiam.toLocaleString('vi-VN')} đ</td>
                     </tr>`;
             });
 
@@ -154,36 +188,42 @@
         }
 
         function filterSales() {
+            const year = document.getElementById('yearFilter').value;
             const keyword = document.getElementById('searchCustomer').value.toLowerCase().trim();
 
-            if (!keyword) {
-                renderSales(HoaDonGiaoDich);
-                return;
+            let filtered = HoaDonGiaoDich;
+
+            // Lọc theo năm
+            if (year !== 'all') {
+                filtered = filtered.filter(gd => gd.ThoiGian.startsWith(year));
             }
 
-            const filtered = HoaDonGiaoDich.filter(gd => 
-                gd.TenKH.toLowerCase().includes(keyword) || 
-                gd.MaKH.toLowerCase().includes(keyword)
-            );
+            // Lọc theo tên hoặc mã khách hàng
+            if (keyword) {
+                filtered = filtered.filter(gd => 
+                    gd.TenKH.toLowerCase().includes(keyword) || 
+                    gd.MaKH.toLowerCase().includes(keyword)
+                );
+            }
 
             renderSales(filtered);
         }
 
         function resetSales() {
+            document.getElementById('yearFilter').value = 'all';
             document.getElementById('searchCustomer').value = '';
             renderSales(HoaDonGiaoDich);
         }
 
-        // Khởi tạo khi tải trang
+        // Khởi tạo trang
         window.onload = () => {
             if (typeof HoaDonGiaoDich === 'undefined') {
-                console.error("❌ Không tìm thấy dữ liệu HoaDonGiaoDich từ data.js");
                 document.getElementById('salesBody').innerHTML = 
-                    `<tr><td colspan="7" class="text-danger text-center py-5">Lỗi: Chưa load được data.js</td></tr>`;
+                    `<tr><td colspan="7" class="text-danger text-center py-5">Lỗi: Không load được dữ liệu</td></tr>`;
                 return;
             }
             renderSales();
-            console.log("%c✅ Nhật ký giao dịch đã tải thành công", "color:#ffc107;font-weight:bold");
+            console.log("%c✅ Nhật ký giao dịch đã tải thành công với bộ lọc năm", "color:#ffc107;font-weight:bold");
         };
     </script>
 </body>
