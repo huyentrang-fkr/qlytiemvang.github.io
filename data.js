@@ -163,27 +163,11 @@ const LuongNhanVien = [
     { MaLuong: 'L20260303', MaNV: 'NV03', SoNgayLam: 26, Thuong: 3000000, TongLuong: 11000000 }
 ];
 
-const ChiTietHoaDon = [
-    { MaGD: 'GD2501', MaHH: 'HH10', SoLuong: 1, DonGiaNiemYet: 15600000, TyLeGiam: 2.0, ThanhTienSauGiam: 15288000 },
-    { MaGD: 'GD2502', MaHH: 'HH16', SoLuong: 1, DonGiaNiemYet: 28500000, TyLeGiam: 0, ThanhTienSauGiam: 28500000 },
-    { MaGD: 'GD2503', MaHH: 'HH01', SoLuong: 5, DonGiaNiemYet: 1860000000, TyLeGiam: 0.5, ThanhTienSauGiam: 9253500000 },
-    { MaGD: 'GD2504', MaHH: 'HH25', SoLuong: 10, DonGiaNiemYet: 18500000, TyLeGiam: 0, ThanhTienSauGiam: 185000000 },
-    { MaGD: 'GD2505', MaHH: 'HH13', SoLuong: 1, DonGiaNiemYet: 105000000, TyLeGiam: 1.0, ThanhTienSauGiam: 103950000 },
-    { MaGD: 'GD2505', MaHH: 'HH08', SoLuong: 1, DonGiaNiemYet: 8500000, TyLeGiam: 0, ThanhTienSauGiam: 8500000 },
-    { MaGD: 'GD2506', MaHH: 'HH05', SoLuong: 1, DonGiaNiemYet: 65000000, TyLeGiam: 1.5, ThanhTienSauGiam: 64025000 },
-    { MaGD: 'GD2507', MaHH: 'HH08', SoLuong: 2, DonGiaNiemYet: 8500000, TyLeGiam: 5.0, ThanhTienSauGiam: 16150000 },
-    { MaGD: 'GD2508', MaHH: 'HH20', SoLuong: 2, DonGiaNiemYet: 5250000, TyLeGiam: 5.0, ThanhTienSauGiam: 9975000 },
-    { MaGD: 'GD2509', MaHH: 'HH19', SoLuong: 1, DonGiaNiemYet: 3500000, TyLeGiam: 0, ThanhTienSauGiam: 3500000 },
-    { MaGD: 'GD2601', MaHH: 'HH06', SoLuong: 1, DonGiaNiemYet: 125000000, TyLeGiam: 1.0, ThanhTienSauGiam: 123750000 },
-    { MaGD: 'GD2602', MaHH: 'HH03', SoLuong: 2, DonGiaNiemYet: 18600000, TyLeGiam: 0, ThanhTienSauGiam: 37200000 },
-    { MaGD: 'GD2603', MaHH: 'HH10', SoLuong: 1, DonGiaNiemYet: 17500000, TyLeGiam: 0, ThanhTienSauGiam: 17500000 },
-    { MaGD: 'GD2604', MaHH: 'HH02', SoLuong: 2, DonGiaNiemYet: 93000000, TyLeGiam: 0.2, ThanhTienSauGiam: 185628000 },
-    { MaGD: 'GD2605', MaHH: 'HH25', SoLuong: 5, DonGiaNiemYet: 18500000, TyLeGiam: 0, ThanhTienSauGiam: 92500000 },
-    { MaGD: 'GD2606', MaHH: 'HH17', SoLuong: 1, DonGiaNiemYet: 35000000, TyLeGiam: 2.0, ThanhTienSauGiam: 34300000 },
-    { MaGD: 'GD2607', MaHH: 'HH20', SoLuong: 1, DonGiaNiemYet: 5250000, TyLeGiam: 0, ThanhTienSauGiam: 5250000 },
-    { MaGD: 'GD2608', MaHH: 'HH15', SoLuong: 1, DonGiaNiemYet: 3080000000, TyLeGiam: 1.0, ThanhTienSauGiam: 3049200000 },
-    { MaGD: 'GD2609', MaHH: 'HH22', SoLuong: 1, DonGiaNiemYet: 31200000, TyLeGiam: 0, ThanhTienSauGiam: 31200000 },
-    { MaGD: 'GD2610', MaHH: 'HH24', SoLuong: 1, DonGiaNiemYet: 277500000, TyLeGiam: 2.0, ThanhTienSauGiam: 271950000 }
-];
+const ChiTietHoaDon = HoaDonGiaoDich.map(gd => ({
+    MaGD: gd.MaGD,
+    MaHH: gd.MaHH,
+    SoLuong: gd.SoLuong,
+    ThanhTienSauGiam: gd.ThanhTienSauGiam
+}));
 
 
