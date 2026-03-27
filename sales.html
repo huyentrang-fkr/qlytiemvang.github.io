@@ -34,61 +34,55 @@
             height: fit-content;
         }
 
-        /* Bảng lớn hơn, tối màu */
+        /* Bảng lớn, tối màu */
         .sales-table-container {
-            background: rgba(22, 66, 69, 0.85);     /* Đậm hơn nền một chút */
+            background: rgba(22, 66, 69, 0.92);   /* Nền bảng đậm */
             backdrop-filter: blur(12px);
             border-radius: 24px;
-            border: 1px solid rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.25);
             overflow: hidden;
             box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
         }
 
-        #salesTable {
-            margin-bottom: 0;
-        }
-
         #salesTable thead th {
-            background: rgba(255, 193, 7, 0.12);
-            color: var(--accent-gold);
-            font-weight: 600;
+            background: rgba(255, 193, 7, 0.18);
+            color: #ffc107;                       /* Header giữ màu vàng */
+            font-weight: 700;
             text-transform: uppercase;
-            font-size: 0.87rem;
+            font-size: 0.88rem;
             padding: 20px 12px;
-            border-bottom: 2px solid rgba(255,193,7,0.3);
+            border-bottom: 2px solid rgba(255,193,7,0.4);
         }
 
         #salesTable tbody td {
             padding: 18px 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-            color: #e0e0e0;                    /* Màu sáng hơn nền một chút */
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            color: #000000;                       /* ← CHỮ ĐEN như yêu cầu */
+            font-weight: 500;
         }
 
         #salesTable tbody tr:hover {
-            background: rgba(255, 193, 7, 0.09);
+            background: rgba(255, 193, 7, 0.12);
             transition: all 0.3s ease;
         }
 
-        #salesTable td.text-end {
-            color: #ffc107;
+        /* Màu nổi bật vẫn giữ để dễ phân biệt */
+        #salesTable td strong {                   /* Mã GD */
+            color: #006666;
+            font-family: monospace;
             font-weight: 700;
-            font-size: 1.08rem;
         }
 
-        #salesTable td strong {
-            color: #4db6ac;
-            font-family: monospace;
+        #salesTable td.text-end {                 /* Thành tiền */
+            color: #d4a017;
+            font-weight: 700;
+            font-size: 1.08rem;
         }
 
         .form-select, .form-control {
             background-color: #0f2a2c;
             color: white;
             border: 1px solid #26a69a;
-        }
-
-        .form-select:focus, .form-control:focus {
-            border-color: #ffc107;
-            box-shadow: 0 0 0 0.2rem rgba(255,193,7,0.25);
         }
     </style>
     <script src="data.js"></script>
@@ -150,7 +144,7 @@
                 </div>
             </div>
 
-            <!-- Bảng hóa đơn to hơn -->
+            <!-- Bảng hóa đơn -->
             <div class="col-lg-8">
                 <div class="sales-table-container">
                     <div class="table-responsive">
@@ -186,17 +180,17 @@
                 html += `
                     <tr>
                         <td><strong>${gd.MaGD}</strong></td>
-                        <td>${gd.ThoiGian}</td>
-                        <td>${nv.HoTen}</td>
-                        <td>${gd.TenKH}</td>
-                        <td>${hh.Ten}</td>
-                        <td class="text-center">${gd.SoLuong}</td>
-                        <td class="text-end fw-bold">${gd.ThanhTienSauGiam.toLocaleString('vi-VN')} đ</td>
+                        <td style="color: #000000;">${gd.ThoiGian}</td>
+                        <td style="color: #000000;">${nv.HoTen}</td>
+                        <td style="color: #000000;">${gd.TenKH}</td>
+                        <td style="color: #000000;">${hh.Ten}</td>
+                        <td class="text-center" style="color: #000000;">${gd.SoLuong}</td>
+                        <td class="text-end fw-bold" style="color: #d4a017;">${gd.ThanhTienSauGiam.toLocaleString('vi-VN')} đ</td>
                     </tr>`;
             });
 
             if (filteredData.length === 0) {
-                html = `<tr><td colspan="7" class="text-center py-5 text-muted">Không tìm thấy hóa đơn nào phù hợp</td></tr>`;
+                html = `<tr><td colspan="7" class="text-center py-5" style="color: #000000;">Không tìm thấy hóa đơn nào phù hợp</td></tr>`;
             }
 
             tbody.innerHTML = html;
@@ -231,7 +225,7 @@
         window.onload = () => {
             if (typeof HoaDonGiaoDich === 'undefined') {
                 document.getElementById('salesBody').innerHTML = 
-                    `<tr><td colspan="7" class="text-danger text-center py-5">Lỗi: Không load được dữ liệu từ data.js</td></tr>`;
+                    `<tr><td colspan="7" class="text-center py-5" style="color:#000000;">Lỗi: Không load được dữ liệu từ data.js</td></tr>`;
                 return;
             }
             renderSales();
